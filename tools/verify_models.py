@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """Validate actual packaged skin, joint indices, buffers and provenance, no GL required."""
 
-import json, struct, hashlib
+import json, struct, hashlib, os
 from pathlib import Path
 import numpy as np
 
 root = Path(__file__).resolve().parents[1] / "app/src/main/assets/game/models"
 for info in json.loads((root / "manifest.json").read_text()):
+    if (
+        os.environ.get("TOKYO_CAT_VERIFY_BREED")
+        and info["id"] != os.environ["TOKYO_CAT_VERIFY_BREED"]
+    ):
+        continue
     data = (root / info["file"]).read_bytes()
     assert hashlib.sha256(data).hexdigest() == info["sha256"]
     assert data[:4] == b"glTF"
@@ -38,10 +43,20 @@ for info in json.loads((root / "manifest.json").read_text()):
         for leg in ["front_left", "front_right", "rear_left", "rear_right"]
     ), "Paws need deforming joints for foot IK"
     for i, node in enumerate(j["nodes"]):
-        if node["name"] == "fur_fibres":
+        if node["name"] in ["fur_guard", "fur_undercoat"]:
             assert (
                 node.get("skin") == 0
             ), "Fur must deform with the same skin as the body"
+    groom = j["extras"].get("fur")
+    assert groom and len(groom["layers"]) == 2, "Two-layer groom is required"
+    assert {n["name"] for n in j["nodes"]} >= {"fur_guard", "fur_undercoat"}
+    for layer in groom["layers"]:
+        assert layer["clumps"] > 1500
+        assert layer["regions"]["face"] > 40 and layer["regions"]["tail"] > 40
+        assert layer["regions"]["chest"] > 40
+        assert 0 < layer["lengthRangeMetres"][0] < layer["lengthRangeMetres"][1] < 0.08
+    furmat = next(m for m in j["materials"] if m["name"] == "groomed_soft_fur")
+    assert furmat["alphaMode"] == "BLEND", "Subpixel strands need soft alpha edges"
     mesh = next(
         m for m in j["meshes"] if m.get("name") == "continuous_anatomical_skin"
     )["primitives"][0]
@@ -73,6 +88,20 @@ for info in json.loads((root / "manifest.json").read_text()):
             if "WEIGHTS_0" in at:
                 assert np.allclose(accessor(at["WEIGHTS_0"]).sum(axis=1), 1, atol=1e-5)
                 assert accessor(at["JOINTS_0"]).max() < len(skin["joints"])
+                pos = accessor(at["POSITION"])
+                face = accessor(primitive["indices"]).reshape(-1, 3)
+                assert face.max() < len(pos)
+                if m.get("name", "").startswith("groomed_fur_"):
+                    norm = accessor(at["NORMAL"])
+                    assert np.allclose(np.linalg.norm(norm, axis=1), 1, atol=0.01)
+                    fn = np.cross(
+                        pos[face[:, 1]] - pos[face[:, 0]],
+                        pos[face[:, 2]] - pos[face[:, 0]],
+                    )
+                    assert np.all(
+                        np.einsum("ij,ij->i", fn, norm[face].mean(axis=1)) > 0
+                    ), "Fur winding must face away from skin"
+
     assert [a["name"] for a in j["animations"]] == [
         "Idle",
         "Walk",
@@ -131,5 +160,5 @@ for info in json.loads((root / "manifest.json").read_text()):
     assert all("uri" not in image for image in j["images"])
     assert j["extras"]["reference"] == "https://www.youtube.com/watch?v=Jxv0e1VXSR0"
     print(
-        f"PASS {info['id']}: {len(weights)} vertices, {len(skin['joints'])} joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256"
+        f"PASS {info['id']}: {len(weights)} vertices, {len(skin['joints'])} joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256"
     )

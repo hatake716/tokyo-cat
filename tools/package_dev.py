@@ -38,6 +38,11 @@ with zipfile.ZipFile(apk) as archive:
             ).hexdigest()
             == model["sha256"]
         )
+    for runtime in ["game.mjs", "cat-motion.mjs", "fur-light.mjs"]:
+        assert (
+            archive.read("assets/game/" + runtime)
+            == (ROOT / "app/src/main/assets/game" / runtime).read_bytes()
+        )
     code = archive.read("assets/game/game.mjs")
     assert b"forwardAxis: C.Axis.X" in code
     assert b"useBrowserRecommendedResolution = false" in code
@@ -48,6 +53,7 @@ with zipfile.ZipFile(
     for path in sorted((ROOT / "app/src/main/assets/game/models").iterdir()):
         archive.write(path, path.name)
     archive.write(ROOT / "docs/CAT_MODELS.md", "README.md")
+    archive.write(ROOT / "docs/FUR.md", "FUR.md")
     archive.write(
         ROOT / "docs/sources/cat-video-reference.json",
         "sources/cat-video-reference.json",

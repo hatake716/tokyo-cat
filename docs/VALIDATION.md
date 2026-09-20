@@ -1,11 +1,11 @@
-# TOKYO-CAT 0.2.0-dev 検証記録
+# TOKYO-CAT 0.3.0-dev 検証記録
 
 検証日：2026-09-21。これは動作する開発版の検証です。フォトリアル品質の完成、実機での性能保証、ストア公開の証明ではありません。
 
 ## 実行環境とビルド
 
 - アプリID：`io.github.hatake716.tokyocat`
-- versionName：`0.2.0-dev`、versionCode：`2`
+- versionName：`0.3.0-dev`、versionCode：`3`
 - JDK 17、Gradle 8.14.3、Android Gradle Plugin 8.13.0
 - compileSdk / targetSdk 36、minSdk 29（Android 10）
 - Android Emulator API 35、2400 × 1080、ホストGPUを利用。端末指定は `emulator-5554`。
@@ -18,18 +18,20 @@ APKは開発用証明書で署名され、署名検証を通過しています�
 ## ゲームロジック・モデル
 
 - Node.js の **30テスト成功**。5地区・15地点・10モデル、翻訳キー、メートル単位の地理移動、走行速度、斜め移動、境界、発見範囲、挨拶距離、不正セーブの復旧、保存の往復、歩行・速歩の脚運び、停止時の接地を検査。追加テストでは、定速で接地足が前進量を相殺すること、全脚長でIKが足の目標点へ届くこと、離地・着地の速度連続性、脚長と歩幅、まばたき・呼吸・耳、座位への遷移中の接地を検査。
-- **10 GLBすべて検査成功**。ファイル長・SHA-256、アクセサの参照範囲、有限値、スキンのウェイト和、24ジョイントの参照、法線と面の表裏の整合性、埋め込み素材、制作元のメタデータを検査。毛カードのスキン、法線テクスチャ、5クリップのループも検査。全クリップ・全61フレームについてGLBに記録された関節変換を合成し、足の支点が地面を下回らないことと、静止・座位の接地を確認。
+- **10 GLBすべて検査成功**。ファイル長・SHA-256、アクセサの参照範囲、有限値、スキンのウェイト和、24ジョイントの参照、法線と面の表裏の整合性、埋め込み素材、制作元のメタデータを検査。下毛・差し毛の2層、各層の部位別根元数、毛丈、BLENDマテリアル、毛束の法線と面方向、スキン、法線テクスチャ、5クリップのループも検査。全クリップ・全61フレームについてGLBに記録された関節変換を合成し、足の支点が地面を下回らないことと、静止・座位の接地を確認。
 - 配布APKをZIPとして開き、収録した5地区・15地点・10GLB、モデルSHA-256、最終描画設定を確認。動画・音声ファイルの混入なし。
 
 証拠：[core-tests.txt](verification/core-tests.txt)、[model-validation.txt](verification/model-validation.txt)、[artifacts.json](verification/artifacts.json)、[apk-signature.txt](verification/apk-signature.txt)、[apk-badging.txt](verification/apk-badging.txt)。
 
 ## Android上の操作検証
 
+最終0.3 APKで5本のinstrumentationテストがすべて成功しました。猫の接近表示・性能計測36.838秒、10種と歩行・走行の表示113.055秒、観光・撮影・保存59.247秒、プロセス再起動10.311秒、撮影中のNPC静止16.208秒。
+
 テストはAndroidのタッチイベントを実際に送ります。JavaScriptはDOMの位置と画面状態の読み取りに使用し、探索座標・発見状態・写真をテスト側から注入しません。
 
 `GameFlowTest#completeTokyoJourney` の1本のテストで、次の9段階を確認しています。
 
-1. 丸の内で地形・建物タイル・猫モデルを読み込み、建物の読み込み数が0より大きいこと。
+1. 起動時の地区（今回の保存状態では浅草）で地形・建物タイル・猫モデルを読み込み、建物の読み込み数が0より大きいこと。
 2. 日本語から英語、英語から日本語へ切り替わり、英語の開始ボタンが表示されること。
 3. 猫の選択画面に10件あり、ラグドールを選択できること。
 4. 新宿・渋谷・秋葉原・浅草へ順に切り替え、各地区の実際の建物タイルと猫モデルが読み込まれること。
@@ -47,11 +49,23 @@ APKは開発用証明書で署名され、署名検証を通過しています�
 
 ログ：[android-journey.txt](verification/android-journey.txt)、[android-process-restart.txt](verification/android-process-restart.txt)。スクリーンショット：[screenshots](verification/screenshots)。
 
+## 0.3の毛並みと描画測定
+
+10種に毛を追加した最終APKで `FurReviewTest#fluffyCloseup` が成功。ネイティブのタッチ操作でラグドールを選び、散歩してから撮影モードに入り、距離と向きを調整。正面・横・斜め・座位を記録し、描画エラーがないことを検査しました。実際のスクリーンショットを目視で確認し、毛束の板状の明暗を抑え、毛先の半透明によって胸・頬・尾の輪郭が柔らかく表示されることを確認しています。
+
+- 設定：標準画質、目標30fps、画面2400 × 1080、3D描画1800 × 810。
+- 対象：浅草で長毛のラグドールを撮影。周囲12匹も0.3の毛付きモデル。
+- 待機：接近したカメラの調整後14秒。直近180描画間隔を取得。
+- 観測：**平均29.82fps、描画間隔p95 58.9ms**。テストは計測値の取得を検査し、すべての場面で30fpsを保証する性能合格基準にはしていません。
+- ホストGPUを使うエミュレーターの1場面・1回の測定です。Android実機の描画性能、発熱や消費電力は未検証です。
+
+[操作ログ](verification/android-fur-review.txt)、[測定値](verification/fur-performance.json)、[モデル別の毛束数](verification/fur-model-stats.json)、[毛の実装仕様](FUR.md)。
+
 ## データ配信と観光出典
 
-4自治体の建物tileset.jsonと地形layer.jsonについて、実際のHTTP応答、長さ、SHA-256を記録しました。**5 URLともHTTP 200**。[live-sources.json](verification/live-sources.json)
+0.2で記録した4自治体の建物tileset.jsonと地形layer.jsonについて、実際のHTTP応答、長さ、SHA-256を記録しました。**5 URLともHTTP 200**。[live-sources.json](verification/live-sources.json)
 
-15地点の解説用URLも実際に取得し、HTTP 200、リダイレクト先、ページタイトルを記録しています。[landmark-sources.json](verification/landmark-sources.json)
+0.2では15地点の解説用URLも実際に取得し、HTTP 200、リダイレクト先、ページタイトルを記録しています。[landmark-sources.json](verification/landmark-sources.json)
 
 これは今後の配信継続、全タイルの可用性、全経路での当たり判定を保証するものではありません。
 
@@ -71,4 +85,4 @@ APKは開発用証明書で署名され、署名検証を通過しています�
 
 ## 配布物
 
-`artifacts/0.2.0-dev/` にインストール可能な開発用APK、10モデルをまとめたZIP、SHA256SUMS.txtを配置。最終サイズとハッシュは [artifacts.json](verification/artifacts.json) に記録しています。
+`artifacts/0.3.0-dev/` にインストール可能な開発用APK、10モデルをまとめたZIP、SHA256SUMS.txtを配置。最終サイズとハッシュは [artifacts.json](verification/artifacts.json) に記録しています。

@@ -1,10 +1,10 @@
-PASS scottish: 31632 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS mixed: 31246 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS munchkin: 27578 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS ragdoll: 33170 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS minuet: 30684 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS siberian: 34610 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS british: 32572 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS american: 31246 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS norwegian: 35628 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
-PASS ragamuffin: 35128 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS scottish: 31928 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS mixed: 31460 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS munchkin: 27800 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS ragdoll: 33366 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS minuet: 30986 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS siberian: 34806 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS british: 32880 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS american: 31460 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS norwegian: 35828 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS ragamuffin: 35320 vertices, 24 joints, two-layer groom and soft alpha, grounded paw anchors, looping clips, valid weights/buffers/SHA256

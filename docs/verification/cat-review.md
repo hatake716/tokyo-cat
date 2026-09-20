@@ -1,6 +1,6 @@
 # 猫モデルのAndroid表示確認
 
-2026-09-21。最終GLBをAndroid Emulator / Cesium上で描画し、実際のタッチ操作で視点と姿勢を変更して撮影しました。写真品質の認定ではなく、モデルの表示・品種差・姿勢を確認する記録です。スクリーンショットは無加工です。
+2026-09-21、0.3.0-dev。最終GLBをAndroid Emulator / Cesium上で描画し、実際のタッチ操作で視点と姿勢を変更して撮影しました。写真品質の認定ではなく、モデルの表示・品種差・姿勢を確認する記録です。スクリーンショットは無加工です。
 
 | 猫 | 正面 | 横 | 座位 |
 | --- | --- | --- | --- |
@@ -17,4 +17,14 @@
 
 歩行・走行の連続フレームは `screenshots/motion-walk-*.png` と `screenshots/motion-run-*.png`。足の接地の数値検証は [model-validation.txt](model-validation.txt) と [core-tests.txt](core-tests.txt) を参照。
 
-10種類の表示検査で使ったGLBは最終APKのモデルと同じです。この検査後、撮影中のNPCがその場で足踏みする不具合を修正。最終APKで [撮影中の静止姿勢](android-photo-idle.txt)、[全体操作](android-journey.txt)、[プロセス再起動](android-process-restart.txt) を再検証しました。
+10種類の表示検査で使ったGLBは最終APKのモデルと同じです。0.3では撮影中のNPC静止、全体操作、プロセス再起動も最終APKで検査しています。
+
+## もふもふの毛の接近表示
+
+[FurReviewTestの操作ログ](android-fur-review.txt)。ラグドールの下毛・差し毛、胸元・頬・尾、耳の毛を確認しました。毛は半透明の湾曲した束で、体表の関節に追従します。独立した毛の物理計算ではありません。
+
+![斜めから見た長毛](screenshots/fur-three-quarter.png)
+
+[正面](screenshots/fur-front.png) / [横](screenshots/fur-side.png) / [座位](screenshots/fur-seated.png)
+
+同じ場面の[測定値](fur-performance.json)は平均29.82fps、p95 58.9ms（180描画間隔、標準画質、目標30fps）。エミュレーターの測定で、実機性能の保証ではありません。

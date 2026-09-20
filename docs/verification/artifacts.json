@@ -1,10 +1,10 @@
 {
-  "TOKYO-CAT-0.2.0-dev.apk": {
-    "bytes": 36413352,
-    "sha256": "f67d6a64d9988c0d5c4aaeccbc5dc4b2727b089aa881d469c43f7f922d48d01d"
+  "TOKYO-CAT-0.3.0-dev.apk": {
+    "bytes": 50970291,
+    "sha256": "4e2b6b9ad5b95669daeac5492fab4c818277872d6e7d46ecc3efa70e736565be"
   },
-  "TOKYO-CAT-cat-models-0.2.0-dev.zip": {
-    "bytes": 21315038,
-    "sha256": "7a48d4c623664fd255824ea2970bb2ca00722803e4c9b59a7034613925d09346"
+  "TOKYO-CAT-cat-models-0.3.0-dev.zip": {
+    "bytes": 35641312,
+    "sha256": "42017b802f07e81489caf902c1ab733db01558f8cbcccb045d6a862f0905a9a7"
   }
 }

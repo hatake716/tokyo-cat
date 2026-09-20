@@ -1,7 +1,7 @@
 
 io.github.hatake716.tokyocat.CatVisualTest:.
 
-Time: 116.721
+Time: 113.055
 
 OK (1 test)
 

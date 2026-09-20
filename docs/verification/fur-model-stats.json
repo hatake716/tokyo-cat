@@ -1,0 +1,452 @@
+[
+  {
+    "id": "american",
+    "bodyClumps": 5463,
+    "earClumps": 480,
+    "furVertices": 46584,
+    "bodyVertices": 31460,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 2336,
+        "vertices": 18688,
+        "triangles": 14016,
+        "lengthRangeMetres": [
+          0.0011285893561892686,
+          0.012339012107358941
+        ],
+        "regions": {
+          "face": 246,
+          "cheek": 129,
+          "chest": 268,
+          "tail": 245,
+          "legs": 632,
+          "belly": 237
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 3127,
+        "vertices": 25016,
+        "triangles": 18762,
+        "lengthRangeMetres": [
+          0.0021607434249801003,
+          0.02369758811984942
+        ],
+        "regions": {
+          "face": 299,
+          "cheek": 148,
+          "chest": 373,
+          "tail": 302,
+          "legs": 852,
+          "belly": 369
+        }
+      }
+    ]
+  },
+  {
+    "id": "british",
+    "bodyClumps": 5466,
+    "earClumps": 480,
+    "furVertices": 46608,
+    "bodyVertices": 32880,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 2340,
+        "vertices": 18720,
+        "triangles": 14040,
+        "lengthRangeMetres": [
+          0.0011239440531581608,
+          0.012339012107358941
+        ],
+        "regions": {
+          "face": 261,
+          "cheek": 115,
+          "chest": 269,
+          "tail": 232,
+          "legs": 624,
+          "belly": 218
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 3126,
+        "vertices": 25008,
+        "triangles": 18756,
+        "lengthRangeMetres": [
+          0.002162284521658439,
+          0.02369758811984942
+        ],
+        "regions": {
+          "face": 314,
+          "cheek": 147,
+          "chest": 371,
+          "tail": 297,
+          "legs": 828,
+          "belly": 286
+        }
+      }
+    ]
+  },
+  {
+    "id": "minuet",
+    "bodyClumps": 8751,
+    "earClumps": 480,
+    "furVertices": 72888,
+    "bodyVertices": 30986,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 3699,
+        "vertices": 29592,
+        "triangles": 22194,
+        "lengthRangeMetres": [
+          0.001124913279879343,
+          0.03118353736826923
+        ],
+        "regions": {
+          "face": 378,
+          "cheek": 188,
+          "chest": 498,
+          "tail": 428,
+          "legs": 817,
+          "belly": 311
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 5052,
+        "vertices": 40416,
+        "triangles": 30312,
+        "lengthRangeMetres": [
+          0.0021615704839146373,
+          0.05999224666990056
+        ],
+        "regions": {
+          "face": 499,
+          "cheek": 221,
+          "chest": 654,
+          "tail": 580,
+          "legs": 1126,
+          "belly": 487
+        }
+      }
+    ]
+  },
+  {
+    "id": "mixed",
+    "bodyClumps": 5463,
+    "earClumps": 480,
+    "furVertices": 46584,
+    "bodyVertices": 31460,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 2336,
+        "vertices": 18688,
+        "triangles": 14016,
+        "lengthRangeMetres": [
+          0.0011285893561892686,
+          0.012339012107358941
+        ],
+        "regions": {
+          "face": 246,
+          "cheek": 129,
+          "chest": 268,
+          "tail": 245,
+          "legs": 632,
+          "belly": 237
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 3127,
+        "vertices": 25016,
+        "triangles": 18762,
+        "lengthRangeMetres": [
+          0.0021607434249801003,
+          0.02369758811984942
+        ],
+        "regions": {
+          "face": 299,
+          "cheek": 148,
+          "chest": 373,
+          "tail": 302,
+          "legs": 852,
+          "belly": 369
+        }
+      }
+    ]
+  },
+  {
+    "id": "munchkin",
+    "bodyClumps": 5455,
+    "earClumps": 480,
+    "furVertices": 46520,
+    "bodyVertices": 27800,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 2341,
+        "vertices": 18728,
+        "triangles": 14046,
+        "lengthRangeMetres": [
+          0.0011255519035970986,
+          0.012339012107358941
+        ],
+        "regions": {
+          "face": 242,
+          "cheek": 118,
+          "chest": 326,
+          "tail": 273,
+          "legs": 440,
+          "belly": 270
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 3114,
+        "vertices": 24912,
+        "triangles": 18684,
+        "lengthRangeMetres": [
+          0.0021638843225325302,
+          0.023711276642765445
+        ],
+        "regions": {
+          "face": 345,
+          "cheek": 168,
+          "chest": 410,
+          "tail": 339,
+          "legs": 606,
+          "belly": 355
+        }
+      }
+    ]
+  },
+  {
+    "id": "norwegian",
+    "bodyClumps": 8808,
+    "earClumps": 480,
+    "furVertices": 73344,
+    "bodyVertices": 35828,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 3701,
+        "vertices": 29608,
+        "triangles": 22206,
+        "lengthRangeMetres": [
+          0.0011248027875832695,
+          0.03118353736826923
+        ],
+        "regions": {
+          "face": 289,
+          "cheek": 138,
+          "chest": 405,
+          "tail": 384,
+          "legs": 1224,
+          "belly": 275
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 5107,
+        "vertices": 40856,
+        "triangles": 30642,
+        "lengthRangeMetres": [
+          0.002160850858598729,
+          0.059964849936411685
+        ],
+        "regions": {
+          "face": 445,
+          "cheek": 210,
+          "chest": 530,
+          "tail": 516,
+          "legs": 1654,
+          "belly": 417
+        }
+      }
+    ]
+  },
+  {
+    "id": "ragamuffin",
+    "bodyClumps": 8800,
+    "earClumps": 480,
+    "furVertices": 73280,
+    "bodyVertices": 35320,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 3694,
+        "vertices": 29552,
+        "triangles": 22164,
+        "lengthRangeMetres": [
+          0.0011254339962609985,
+          0.03118353736826923
+        ],
+        "regions": {
+          "face": 287,
+          "cheek": 148,
+          "chest": 458,
+          "tail": 386,
+          "legs": 1118,
+          "belly": 279
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 5106,
+        "vertices": 40848,
+        "triangles": 30636,
+        "lengthRangeMetres": [
+          0.0021615704839146373,
+          0.059964849936411685
+        ],
+        "regions": {
+          "face": 431,
+          "cheek": 208,
+          "chest": 551,
+          "tail": 521,
+          "legs": 1505,
+          "belly": 429
+        }
+      }
+    ]
+  },
+  {
+    "id": "ragdoll",
+    "bodyClumps": 8797,
+    "earClumps": 480,
+    "furVertices": 73256,
+    "bodyVertices": 33366,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 3712,
+        "vertices": 29696,
+        "triangles": 22272,
+        "lengthRangeMetres": [
+          0.0011248027875832695,
+          0.03118353736826923
+        ],
+        "regions": {
+          "face": 319,
+          "cheek": 134,
+          "chest": 418,
+          "tail": 407,
+          "legs": 1124,
+          "belly": 320
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 5085,
+        "vertices": 40680,
+        "triangles": 30510,
+        "lengthRangeMetres": [
+          0.0021615704839146373,
+          0.059964849936411685
+        ],
+        "regions": {
+          "face": 459,
+          "cheek": 234,
+          "chest": 554,
+          "tail": 551,
+          "legs": 1427,
+          "belly": 453
+        }
+      }
+    ]
+  },
+  {
+    "id": "scottish",
+    "bodyClumps": 5459,
+    "earClumps": 480,
+    "furVertices": 46552,
+    "bodyVertices": 31928,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 2338,
+        "vertices": 18704,
+        "triangles": 14028,
+        "lengthRangeMetres": [
+          0.0011362586409018915,
+          0.012339012107358941
+        ],
+        "regions": {
+          "face": 268,
+          "cheek": 110,
+          "chest": 251,
+          "tail": 239,
+          "legs": 631,
+          "belly": 245
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 3121,
+        "vertices": 24968,
+        "triangles": 18726,
+        "lengthRangeMetres": [
+          0.0021607434249801003,
+          0.02369758811984942
+        ],
+        "regions": {
+          "face": 339,
+          "cheek": 160,
+          "chest": 394,
+          "tail": 298,
+          "legs": 839,
+          "belly": 316
+        }
+      }
+    ]
+  },
+  {
+    "id": "siberian",
+    "bodyClumps": 8785,
+    "earClumps": 480,
+    "furVertices": 73160,
+    "bodyVertices": 34806,
+    "layers": [
+      {
+        "name": "undercoat",
+        "clumps": 3689,
+        "vertices": 29512,
+        "triangles": 22134,
+        "lengthRangeMetres": [
+          0.0011259210557294302,
+          0.03118353736826923
+        ],
+        "regions": {
+          "face": 298,
+          "cheek": 147,
+          "chest": 446,
+          "tail": 391,
+          "legs": 1089,
+          "belly": 297
+        }
+      },
+      {
+        "name": "guard",
+        "clumps": 5096,
+        "vertices": 40768,
+        "triangles": 30576,
+        "lengthRangeMetres": [
+          0.0021641946104322654,
+          0.059964849936411685
+        ],
+        "regions": {
+          "face": 402,
+          "cheek": 202,
+          "chest": 595,
+          "tail": 525,
+          "legs": 1454,
+          "belly": 415
+        }
+      }
+    ]
+  }
+]

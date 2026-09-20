@@ -1,3 +1,4 @@
+import { createFurLight } from "./fur-light.mjs";
 import { catPose, gaitDistance } from "./cat-motion.mjs";
 import {
   clamp,
@@ -47,7 +48,9 @@ let input = { x: 0, y: 0 },
 let cityStats = { tilesLoaded: 0, tilesFailed: 0, terrain: false },
   lastError = "",
   paused = false,
-  photoBusy = false;
+  photoBusy = false,
+  furLight;
+const frameSamples = [];
 const t = (k) => words[state.lang][k] || k,
   local = (x) => x?.[state.lang] || x?.en || "",
   esc = (s) =>
@@ -426,6 +429,7 @@ async function makeCat(breed, pos) {
     maximumScale: 1,
     allowPicking: false,
     environmentMapOptions: { enabled: false },
+    customShader: (furLight ??= createFurLight(C)),
     shadows: C.ShadowMode.DISABLED,
   });
   m._breed = breed;
@@ -572,6 +576,12 @@ function applyCatPose(model, name, pose) {
 function animate(model, pos, dt, phase = 0, greeting = 0, locomotion = true) {
   if (!model || !model.ready) return;
   model.modelMatrix = matrixAt(pos);
+  const separation = model === cat ? 0 : distance(pos, p);
+  const guard = model.getNode("fur_guard"),
+    undercoat = model.getNode("fur_undercoat");
+  if (guard) guard.show = separation < (state.quality === "high" ? 18 : 12);
+  if (undercoat) undercoat.show = separation < 28;
+
   const speed = locomotion ? pos.speed : 0;
   const breed = model._breed || catalog.breeds[1];
   model._walkSpeed =
@@ -585,6 +595,8 @@ function animate(model, pos, dt, phase = 0, greeting = 0, locomotion = true) {
     (model._sit || 0) +
     ((model === cat && seated ? 1 : 0) - (model._sit || 0)) *
       Math.min(1, dt * 5);
+  if (separation > 18 && time - (model._poseTime || 0) < 0.1) return;
+  model._poseTime = time;
   const pose = catPose({
     cycle: model._cycle,
     speed: model._walkSpeed,
@@ -601,6 +613,10 @@ function animate(model, pos, dt, phase = 0, greeting = 0, locomotion = true) {
 function frame(scene, clock) {
   const now = performance.now() / 1000,
     dt = last ? clamp(now - last, 0, 0.05) : 0;
+  if (last && now > last) {
+    frameSamples.push((now - last) * 1000);
+    if (frameSamples.length > 180) frameSamples.shift();
+  }
   last = now;
   time += dt;
   const exploring =
@@ -982,7 +998,7 @@ function showSettings() {
 function showCredits() {
   openModal(
     t("about"),
-    `<p class="notice">${esc(t("catNote"))}</p><p>${esc(t("dataNote"))}</p><p>${esc(t("tourNote"))}</p><p>3D: <a href="https://www.mlit.go.jp/plateau/">Project PLATEAU</a> / <a href="https://www.mlit.go.jp/plateau/site-policy/">${state.lang === "ja" ? "利用規約" : "Data policy"}</a> / <a href="https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/">Tokyo Digital Twin</a></p><p>${state.lang === "ja" ? "使用データ：東京都（千代田区・新宿区・渋谷区）／台東区、2025年度建築物モデル。ゲーム画面として合成・表示を加工。" : "Data: Tokyo Metropolitan Government (Chiyoda, Shinjuku, Shibuya) and Taito City, FY2025 buildings. Composited and styled for gameplay."}</p><p>Terrain: PLATEAU | Mapterhorn | 国土地理院<br><a href="https://docs.plateauview.mlit.go.jp/datasets/terrain/">PLATEAU Terrain</a></p><p>Imagery: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院 / GSI</a></p><p>Renderer: CesiumJS 1.127.0 — Apache-2.0<br><a href="https://github.com/CesiumGS/cesium/blob/1.127/LICENSE.md">Cesium license</a></p><p>${esc(t("breedNote"))}<br><a href="${catalog.breedSource}">Anicom 2026</a></p><p>${state.lang === "ja" ? "猫モデル制作の参考指定動画（映像自体は同梱していません）" : "User-designated cat reference (video not included)"}<br><a href="https://www.youtube.com/watch?v=Jxv0e1VXSR0">ネコの生態【サクっと解説】</a></p><p>${state.lang === "ja" ? "猫の形と動きの参考（素材自体は同梱していません）" : "Cat anatomy and motion references (reference media not bundled)"}<br><a href="https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping">Eadweard Muybridge / NGA — Public domain</a><br><a href="https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka — CC BY-SA 3.0</a><br><a href="https://github.com/Mesh2Motion/mesh2motion-app">Mesh2Motion — CC0 art and animations</a></p><p>TOKYO-CAT 0.2.0 · Development build</p>`,
+    `<p class="notice">${esc(t("catNote"))}</p><p>${esc(t("dataNote"))}</p><p>${esc(t("tourNote"))}</p><p>3D: <a href="https://www.mlit.go.jp/plateau/">Project PLATEAU</a> / <a href="https://www.mlit.go.jp/plateau/site-policy/">${state.lang === "ja" ? "利用規約" : "Data policy"}</a> / <a href="https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/">Tokyo Digital Twin</a></p><p>${state.lang === "ja" ? "使用データ：東京都（千代田区・新宿区・渋谷区）／台東区、2025年度建築物モデル。ゲーム画面として合成・表示を加工。" : "Data: Tokyo Metropolitan Government (Chiyoda, Shinjuku, Shibuya) and Taito City, FY2025 buildings. Composited and styled for gameplay."}</p><p>Terrain: PLATEAU | Mapterhorn | 国土地理院<br><a href="https://docs.plateauview.mlit.go.jp/datasets/terrain/">PLATEAU Terrain</a></p><p>Imagery: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院 / GSI</a></p><p>Renderer: CesiumJS 1.127.0 — Apache-2.0<br><a href="https://github.com/CesiumGS/cesium/blob/1.127/LICENSE.md">Cesium license</a></p><p>${esc(t("breedNote"))}<br><a href="${catalog.breedSource}">Anicom 2026</a></p><p>${state.lang === "ja" ? "猫モデル制作の参考指定動画（映像自体は同梱していません）" : "User-designated cat reference (video not included)"}<br><a href="https://www.youtube.com/watch?v=Jxv0e1VXSR0">ネコの生態【サクっと解説】</a></p><p>${state.lang === "ja" ? "猫の形と動きの参考（素材自体は同梱していません）" : "Cat anatomy and motion references (reference media not bundled)"}<br><a href="https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping">Eadweard Muybridge / NGA — Public domain</a><br><a href="https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka — CC BY-SA 3.0</a><br><a href="https://github.com/Mesh2Motion/mesh2motion-app">Mesh2Motion — CC0 art and animations</a></p><p>TOKYO-CAT 0.3.0 · Development build</p>`,
     "credits",
   );
 }
@@ -1138,6 +1154,16 @@ window.tokyoCatStatus = () => ({
   terrainReady,
   tilesReady,
   modelsReady,
+  performance: {
+    samples: frameSamples.length,
+    fps: frameSamples.length
+      ? (1000 * frameSamples.length) / frameSamples.reduce((a, b) => a + b, 0)
+      : 0,
+    p95ms:
+      [...frameSamples].sort((a, b) => a - b)[
+        Math.floor(frameSamples.length * 0.95)
+      ] || 0,
+  },
   npcAnimation: npcs.map((n) => n.model?._walkSpeed || 0),
   stats: { ...cityStats },
   error: lastError,

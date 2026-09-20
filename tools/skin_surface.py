@@ -86,9 +86,9 @@ def build(g, b, fur_mesh, cream_mesh):
     # Small concave eye sockets seat the cornea within the face rather than on it.
     head_pos = translation(next(i for i, n in enumerate(nodes) if n["name"] == "head"))
     for side in [-1, 1]:
-        socket = head_pos + np.array([0.040, 0.010, side * 0.035], dtype=np.float32)
+        socket = head_pos + np.array([0.040, 0.008, side * 0.035], dtype=np.float32)
         field = np.maximum(
-            field, -sdf(xyz, socket, np.array([0.017, 0.011, 0.016], dtype=np.float32))
+            field, -sdf(xyz, socket, np.array([0.020, 0.013, 0.018], dtype=np.float32))
         )
     verts, faces, normals, _ = marching_cubes(
         field, 0, spacing=(step, step, step), gradient_direction="ascent"
@@ -127,7 +127,7 @@ def build(g, b, fur_mesh, cream_mesh):
         mask[headmask] = (
             np.maximum(0, np.cos(z[headmask] * 300 + x[headmask] * 65)) ** 8
         )
-        factor -= mask * 0.62
+        factor -= mask * 0.45
     col = np.clip(factor[:, None] * rgb, 0, 1)
     if tabby:
         back = np.clip((y - hip - 0.028) * 7, 0, 0.22) * (x < 0.15)
@@ -224,73 +224,6 @@ def build(g, b, fur_mesh, cream_mesh):
         "joints": len(joints),
     }
 
-    # Sparse skinned fur cards soften the outline. Each card inherits its sampled
-    # surface's joint indices and weights, including shoulders and rear quarters.
-    long = b["id"] in ["ragdoll", "minuet", "siberian", "norwegian", "ragamuffin"]
-    candidates = np.flatnonzero(
-        (verts[:, 0] < 0.23) & (normals[:, 1] > -0.4) & (verts[:, 1] > 0.045)
-    )
-    rng = np.random.default_rng(721)
-    chosen = rng.choice(candidates, 1600 if long else 700, replace=True)
-    fu, fv = np.meshgrid(np.linspace(0, 1, 128), np.linspace(0, 1, 128))
-    fibres = np.maximum(0, np.cos(fu * math.pi * 22 + np.sin(fv * 7) * 0.5)) ** 9
-    alpha = fibres * (1 - fv) ** 0.4 * np.clip(np.minimum(fu, 1 - fu) * 12, 0, 1)
-    pixels = np.full((128, 128, 4), 255, dtype=np.uint8)
-    pixels[:, :, 3] = np.uint8(alpha * 255)
-    buf = io.BytesIO()
-    Image.fromarray(pixels).save(buf, format="PNG")
-    mat = g.material("individual_fibre_cards", [1, 1, 1], 0.98, buf.getvalue())
-    g.j["materials"][mat].update(alphaMode="MASK", alphaCutoff=0.26)
-    pp = []
-    nn = []
-    uu = []
-    cc = []
-    jj = []
-    ww = []
-    ii = []
-    for idx in chosen:
-        n = normals[idx]
-        t = np.cross(n, [1, 0.13, 0])
-        t /= max(np.linalg.norm(t), 0.0001)
-        length = rng.uniform(0.007, 0.018) if long else rng.uniform(0.002, 0.005)
-        base = verts[idx] - n * 0.0005
-        tip = base + n * length + np.array([-length * 0.22, 0, 0])
-        width = length * 0.26
-        start = len(pp)
-        pp.extend(
-            [
-                base - t * width,
-                base + t * width,
-                tip - t * width * 0.15,
-                tip + t * width * 0.15,
-            ]
-        )
-        nn.extend([n] * 4)
-        uu.extend([[0, 0], [1, 0], [0, 1], [1, 1]])
-        cc.extend([linear[idx]] * 4)
-        jj.extend([order[idx]] * 4)
-        ww.extend([weights[idx]] * 4)
-        ii.extend([start, start + 1, start + 2, start + 1, start + 3, start + 2])
-    attrs = {
-        "POSITION": g.acc(pp, "VEC3"),
-        "NORMAL": g.acc(nn, "VEC3"),
-        "TEXCOORD_0": g.acc(uu, "VEC2"),
-        "COLOR_0": g.acc(cc, "VEC3"),
-        "JOINTS_0": g.acc(jj, "VEC4", 5123),
-        "WEIGHTS_0": g.acc(ww, "VEC4"),
-    }
-    mesh = len(g.j["meshes"])
-    g.j["meshes"].append(
-        {
-            "name": "skinned_fur_fibres",
-            "primitives": [
-                {
-                    "attributes": attrs,
-                    "indices": g.acc(ii, "SCALAR", 5125),
-                    "material": mat,
-                }
-            ],
-        }
-    )
-    node = g.node("fur_fibres", mesh)
-    nodes[node]["skin"] = 0
+    from groom_fur import build as build_fur
+
+    build_fur(g, b, verts, faces, normals, linear, order, weights, head_pos)

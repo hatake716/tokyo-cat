@@ -219,6 +219,51 @@ def tube_mesh(g, curves, mat, sides=5):
     return g.mesh(pos, norm, uv, indices, mat)
 
 
+def ear_surface(u, v, sign, fold):
+    width = 0.025 * (1 - v) ** 0.85 + 0.0015
+    return np.array(
+        [
+            -0.014
+            + 0.016 * (1 - u * u) * (1 - v)
+            + (v * v * 0.030 if fold else -0.008 * v),
+            0.030 + (0.021 if fold else 0.043) * v,
+            sign * (0.044 + v * 0.014 + u * width),
+        ]
+    )
+
+
+def ear_fuzz(g, mat, sign, fold, long):
+    """Small soft tufts on the pinna and rim, following the animated ear node."""
+    rng = np.random.default_rng(476 + sign)
+    points, normals, uv, faces = [], [], [], []
+    for k in range(240):
+        u = rng.uniform(-1, 1)
+        if k < 100:
+            u = rng.choice([-1, 1]) * rng.uniform(0.82, 1)
+        v = rng.uniform(0.05, 0.97)
+        root = ear_surface(u, v, sign, fold)
+        root[0] += 0.002
+        direction = np.array([0.28, 0.7, sign * u * 0.8])
+        direction /= np.linalg.norm(direction)
+        side = np.cross([1, 0, 0], direction)
+        side /= np.linalg.norm(side)
+        length = rng.uniform(0.004, 0.009) * (1 if long else 0.7)
+        width = length * 0.55
+        variant = k % 4
+        base = len(points)
+        for t in [0, 0.5, 1]:
+            center = root + direction * length * t
+            center[0] += 0.0015 * np.sin(t * np.pi)
+            for edge in [-1, 1]:
+                points.append(center + side * width * 0.5 * edge * (1 - 0.6 * t))
+                normals.append([1, 0, 0])
+                uv.append([(variant + (0.02 if edge < 0 else 0.98)) / 4, t * 0.995])
+        for row in range(2):
+            i = base + 2 * row
+            faces.extend([i, i + 2, i + 1, i + 1, i + 2, i + 3])
+    return g.mesh(points, normals, uv, faces, mat)
+
+
 def ear_mesh(g, mat, sign, fold=False, inner=False):
     # Curved shell with a rolled rim and actual thickness; +X faces forward.
     p = []
@@ -228,21 +273,14 @@ def ear_mesh(g, mat, sign, fold=False, inner=False):
     cols = 14
     for row in range(rings):
         v = row / (rings - 1)
-        width = 0.025 * (1 - v) + 0.002
         for col in range(cols):
             u = col / (cols - 1) * 2 - 1
-            x = (
-                -0.014
-                + 0.016 * (1 - u * u) * (1 - v)
-                + (v * v * 0.030 if fold else -0.008 * v)
+            point = ear_surface(
+                u * 0.68 if inner else u, 0.12 + v * 0.74 if inner else v, sign, fold
             )
-            y = 0.030 + (0.021 if fold else 0.049) * v
-            z = sign * (0.044 + v * 0.014 + u * width)
             if inner:
-                x += 0.0015
-                y -= 0.001
-                z = sign * (0.044 + v * 0.014 + u * width * 0.72)
-            p.append([x, y, z])
+                point[0] += 0.0015
+            p.append(point)
             uv.append([(u + 1) / 2, v])
     for row in range(rings - 1):
         for col in range(cols - 1):
@@ -269,7 +307,7 @@ def ear_mesh(g, mat, sign, fold=False, inner=False):
     return g.mesh(p, norm, uv, faces.reshape(-1), mat)
 
 
-def eye_mesh(g, sign, mat, rx=0.015, ry=0.009, depth=0.0035):
+def eye_mesh(g, sign, mat, rx=0.015, ry=0.0105, depth=0.0035):
     pos = []
     norm = []
     uv = []
@@ -313,10 +351,10 @@ def iris_texture(blue):
 
 def make(b, motion):
     g = GLB()
-    g.j["asset"]["generator"] = "TOKYO-CAT authored cat generator 0.2"
+    g.j["asset"]["generator"] = "TOKYO-CAT authored cat generator 0.3"
     fur = g.material("authored_coat", [1, 1, 1], texture=coat(b))
     cream = g.material("chin", [0.83, 0.81, 0.74])
-    pink = g.material("ear_inner", [0.32, 0.15, 0.14])
+    pink = g.material("ear_inner", [0.40, 0.24, 0.23])
     nosemat = g.material("nose_leather", [0.19, 0.085, 0.075], 0.65)
     dark = g.material("pupil_and_lid", [0.009, 0.013, 0.012], 0.28)
     iris = g.material(
@@ -330,6 +368,15 @@ def make(b, motion):
         [int(b["color"][i : i + 2], 16) / 255 * 0.48 for i in [1, 3, 5]],
         0.98,
     )
+    from groom_fur import strand_atlas
+
+    earcoat = g.material(
+        "ear_soft_fur",
+        [int(b["color"][i : i + 2], 16) / 255 * 0.60 for i in [1, 3, 5]],
+        0.97,
+        strand_atlas(),
+    )
+    g.j["materials"][earcoat]["alphaMode"] = "BLEND"
     bulk = b["body"]
     leg = b["legs"]
     y = 0.267 * leg + 0.002
@@ -354,23 +401,23 @@ def make(b, motion):
         "cranium",
         sp[fur],
         (-0.006, 0, 0),
-        (0.058, 0.049 * roundness, 0.058 * roundness),
+        (0.061, 0.052 * roundness, 0.061 * roundness),
         head,
     )
     g.node(
-        "cheeks", sp[fur], (0.022, -0.020, 0), (0.042, 0.031, 0.054 * roundness), head
+        "cheeks", sp[fur], (0.022, -0.020, 0), (0.039, 0.035, 0.057 * roundness), head
     )
     g.node("bridge", sp[fur], (0.042, -0.003, 0), (0.029, 0.029, 0.025), head)
     for side, z in [("left", -1), ("right", 1)]:
         g.node(
             "muzzle", sp[cream], (0.054, -0.026, z * 0.016), (0.023, 0.018, 0.020), head
         )
-        eye = g.node("eye_" + side, None, (0.040, 0.010, z * 0.035), parent=head)
-        g.node("eyelid_edge", eye_mesh(g, z, dark, 0.0157, 0.0097, 0.0035), parent=eye)
+        eye = g.node("eye_" + side, None, (0.040, 0.008, z * 0.035), parent=head)
+        g.node("eyelid_edge", eye_mesh(g, z, dark, 0.0157, 0.0112, 0.0035), parent=eye)
         g.node("iris", eye_mesh(g, z, iris), pos=(0.001, 0, z * 0.001), parent=eye)
         g.node(
             "pupil",
-            eye_mesh(g, z, dark, 0.0025, 0.007, 0.001),
+            eye_mesh(g, z, dark, 0.0052, 0.0083, 0.001),
             pos=(0.0039, 0, z * 0.003),
             parent=eye,
         )
@@ -378,29 +425,20 @@ def make(b, motion):
             "eye_light",
             sp[glint],
             (0.0045, 0.0032, z * 0.0036),
-            (0.0011, 0.0014, 0.0011),
+            (0.0016, 0.0018, 0.0014),
             eye,
         )
         ear = g.node("ear_" + side, parent=head)
         g.node("ear_shell", ear_mesh(g, earfur, z, b["fold"]), parent=ear)
         g.node("ear_concha", ear_mesh(g, pink, z, b["fold"], True), parent=ear)
+        g.node("ear_fuzz_" + side, ear_fuzz(g, earcoat, z, b["fold"], long), parent=ear)
         # Rolled outer ear rim prevents a paper-thin triangular silhouette.
-        eh = 0.021 if b["fold"] else 0.049
         rim = []
         for direction in [-1, 1]:
             rim.append(
                 (
                     [
-                        [
-                            -0.014 + (0.030 * v * v if b["fold"] else -0.008 * v),
-                            0.030 + eh * v,
-                            z
-                            * (
-                                0.044
-                                + 0.014 * v
-                                + direction * (0.025 * (1 - v) + 0.002)
-                            ),
-                        ]
+                        ear_surface(direction, v, z, b["fold"])
                         for v in np.linspace(0, 1, 14)
                     ],
                     0.0016,
@@ -613,6 +651,19 @@ if __name__ == "__main__":
     motion = json.loads(
         subprocess.check_output([node, str(ROOT / "tools/export_cat_motion.mjs")])
     )
-    manifest = [make(b, motion) for b in BREEDS]
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--breed", choices=[b["id"] for b in BREEDS])
+    args = parser.parse_args()
+    previous = (
+        {m["id"]: m for m in json.loads((OUT / "manifest.json").read_text())}
+        if (OUT / "manifest.json").exists()
+        else {}
+    )
+    for b in BREEDS:
+        if args.breed is None or b["id"] == args.breed:
+            previous[b["id"]] = make(b, motion)
+    manifest = [previous[b["id"]] for b in BREEDS if b["id"] in previous]
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest, indent=2))
