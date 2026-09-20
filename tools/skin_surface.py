@@ -22,6 +22,8 @@ def build(g, b, fur_mesh, cream_mesh):
         "neck",
         "chest",
         "head",
+        "ear_left",
+        "ear_right",
         "front_left",
         "front_right",
         "rear_left",
@@ -83,13 +85,8 @@ def build(g, b, fur_mesh, cream_mesh):
         d = sdf(xyz, c, r)
         h = np.maximum(k - np.abs(field - d), 0) / k
         field = np.minimum(field, d) - h * h * k * 0.25
-    # Small concave eye sockets seat the cornea within the face rather than on it.
+    # The detailed head is attached after the continuous body is bound.
     head_pos = translation(next(i for i, n in enumerate(nodes) if n["name"] == "head"))
-    for side in [-1, 1]:
-        socket = head_pos + np.array([0.040, 0.008, side * 0.035], dtype=np.float32)
-        field = np.maximum(
-            field, -sdf(xyz, socket, np.array([0.020, 0.013, 0.018], dtype=np.float32))
-        )
     verts, faces, normals, _ = marching_cubes(
         field, 0, spacing=(step, step, step), gradient_direction="ascent"
     )
@@ -226,4 +223,24 @@ def build(g, b, fur_mesh, cream_mesh):
 
     from groom_fur import build as build_fur
 
-    build_fur(g, b, verts, faces, normals, linear, order, weights, head_pos)
+    from face_surface import build as build_face
+
+    byname = {n["name"]: i for i, n in enumerate(nodes)}
+    fp, ff, fn, fc, fj, fw = build_face(
+        g,
+        b,
+        head_pos,
+        ji[byname["head"]],
+        [ji[byname["ear_left"]], ji[byname["ear_right"]]],
+    )
+    build_fur(
+        g,
+        b,
+        np.concatenate([verts, fp]),
+        np.concatenate([faces, ff + len(verts)]),
+        np.concatenate([normals, fn]),
+        np.concatenate([linear, fc]),
+        np.concatenate([order, fj]),
+        np.concatenate([weights, fw]),
+        head_pos,
+    )

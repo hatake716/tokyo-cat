@@ -9,7 +9,7 @@ export const words = {
     network: "3Dの街の読み込みにはインターネット接続が必要です。",
     districts: "CHOOSE YOUR NEIGHBORHOOD",
     album: "旅のアルバム",
-    dev: "開発版 · 独自制作の猫モデル",
+    dev: "開発版",
     loading: "東京の街を読み込み中…",
     ready: "街の準備ができました",
     failed: "街を読み込めません。接続を確認して再試行してください。",
@@ -65,8 +65,10 @@ export const words = {
     tutorial:
       "左のスティックで移動、街の上をドラッグして見回します。名所の近くで観光記録が自動で残ります。猫に近づいて挨拶したり、撮影モードで思い出を撮りましょう。",
     understood: "散歩へ出かける",
+    faceFocus: "顔をアップ",
+    bodyFocus: "全身に戻す",
     catNote:
-      "猫は独自制作した開発中の3Dモデルです。実写スキャンではありません。毛や体格・動きの精密化を進めています。",
+      "猫は開発中の3Dモデルです。顔にはCC BY 4.0の公開モデルを加工して使用しています。制作元と加工内容は「データとクレジット」をご覧ください。",
     breedNote:
       "アニコム損保「猫種ランキング2026」の上位10区分（混血猫を含む）。新規契約の0歳猫が対象で、日本の全飼育猫の構成比ではありません。",
     dataNote:
@@ -101,7 +103,7 @@ export const words = {
     network: "An internet connection is needed to load the 3D city.",
     districts: "CHOOSE YOUR NEIGHBORHOOD",
     album: "Travel album",
-    dev: "Development · Authored cat models",
+    dev: "Development",
     loading: "Loading the streets of Tokyo…",
     ready: "Your neighborhood is ready",
     failed: "Could not load the city. Check your connection and retry.",
@@ -158,8 +160,10 @@ export const words = {
     tutorial:
       "Move with the left stick and drag the city to look around. Nearby landmarks are automatically added to your album. Say hello to other cats, or frame a memory in photo mode.",
     understood: "Let’s wander",
+    faceFocus: "Face close-up",
+    bodyFocus: "Full body",
     catNote:
-      "These are original 3D cat models in development, not scans. Fur, anatomy and motion still need refinement.",
+      "These cats are in development. Facial geometry adapts a CC BY 4.0 model. See Data and credits for creators and modifications.",
     breedNote:
       "The top ten categories, including mixed-breed cats, from Anicom’s 2026 survey of newly insured kittens. This is not a census of all cats in Japan.",
     dataNote:

@@ -38,6 +38,8 @@ let input = { x: 0, y: 0 },
   yaw = p.heading,
   pitch = -0.24,
   photoRange = 3.5,
+  faceFocus = false,
+  portraitReturn = { range: 3.5, pitch: -0.24 },
   seated = false,
   time = 0,
   last = 0,
@@ -93,6 +95,7 @@ function status(key, error = false) {
   $("retry").hidden = !error;
 }
 function renderText() {
+  $("face-focus").textContent = t(faceFocus ? "bodyFocus" : "faceFocus");
   document.documentElement.lang = state.lang;
   const ids = {
     intro: "intro",
@@ -261,6 +264,7 @@ async function setup() {
     viewer.resolutionScale = state.quality === "high" ? 1 : 0.75;
     viewer.targetFrameRate = 30;
     viewer.scene.screenSpaceCameraController.enableInputs = false;
+    viewer.scene.postProcessStages.fxaa.enabled = true;
     viewer.scene.globe.depthTestAgainstTerrain = true;
     viewer.scene.globe.maximumScreenSpaceError = 2;
     viewer.scene.fog.density = 0.00013;
@@ -433,6 +437,20 @@ async function makeCat(breed, pos) {
     shadows: C.ShadowMode.DISABLED,
   });
   m._breed = breed;
+  m.readyEvent.addEventListener(() => {
+    if (m.getNode("sculpted_face")) {
+      m.activeAnimations.animateWhilePaused = true;
+      const phase = Math.abs((pos.lon + pos.lat) * 10000) % 5.7;
+      const blink = m.activeAnimations.add({
+        name: "Blink",
+        loop: C.ModelAnimationLoop.REPEAT,
+        animationTime: (duration) => ((time + phase) % duration) / duration,
+      });
+      blink.update.addEventListener((model, animation, seconds) => {
+        m._blinkTime = seconds;
+      });
+    }
+  });
   viewer.scene.primitives.add(m);
   return m;
 }
@@ -619,6 +637,15 @@ function frame(scene, clock) {
   }
   last = now;
   time += dt;
+  // Cesium 1.127 Model.update short-circuits activeAnimations.update when a
+  // ModelNode.matrix was set by our procedural IK. Advance the independent
+  // morph clip explicitly before writing those matrices. This pinned-engine
+  // integration is exercised by FaceReviewTest (actual eyelid closure).
+  for (const model of [cat, ...npcs.map((n) => n.model)]) {
+    if (model?.ready && model.activeAnimations.length) {
+      model.activeAnimations.update(scene.frameState);
+    }
+  }
   const exploring =
     !modal && !paused && mode === "play" && terrainReady && tilesReady;
   if (exploring) {
@@ -697,10 +724,23 @@ function frame(scene, clock) {
 }
 function updateCamera() {
   if (!viewer) return;
+  const portrait = mode === "photo" && faceFocus;
+  const focus = portrait
+    ? offset(p, Math.sin(p.heading) * 0.25, Math.cos(p.heading) * 0.25)
+    : p;
+  const headNode = cat?.ready ? cat.getNode("head") : null;
+  const headHeight = headNode
+    ? C.Matrix4.getTranslation(headNode.matrix, new C.Cartesian3()).y
+    : 0.36;
   const center = C.Cartesian3.fromDegrees(
-    p.lon,
-    p.lat,
-    p.height + (firstPerson && mode === "play" ? 0.3 : 0.26),
+    focus.lon,
+    focus.lat,
+    p.height +
+      (portrait
+        ? headHeight + 0.008
+        : firstPerson && mode === "play"
+          ? 0.3
+          : 0.26),
   );
   if (mode === "home") {
     const r = 260,
@@ -721,7 +761,12 @@ function updateCamera() {
     return;
   }
   if (cat) cat.show = true;
-  const range = mode === "photo" ? photoRange : 4.2;
+  const range =
+    mode === "photo"
+      ? faceFocus
+        ? 0.5 + (photoRange - 1) * 0.15
+        : photoRange
+      : 4.2;
   viewer.camera.lookAt(
     center,
     new C.HeadingPitchRange(yaw, clamp(pitch, -1.1, 0.1), range),
@@ -911,6 +956,9 @@ window.onPhotoExport = (id, ok) => {
 };
 function enterCamera() {
   firstPerson = false;
+  if (faceFocus) photoRange = portraitReturn.range;
+  faceFocus = false;
+  $("photo-distance").value = String(photoRange);
   pitch = -0.2;
   seated = false;
   setMode("photo");
@@ -998,7 +1046,7 @@ function showSettings() {
 function showCredits() {
   openModal(
     t("about"),
-    `<p class="notice">${esc(t("catNote"))}</p><p>${esc(t("dataNote"))}</p><p>${esc(t("tourNote"))}</p><p>3D: <a href="https://www.mlit.go.jp/plateau/">Project PLATEAU</a> / <a href="https://www.mlit.go.jp/plateau/site-policy/">${state.lang === "ja" ? "利用規約" : "Data policy"}</a> / <a href="https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/">Tokyo Digital Twin</a></p><p>${state.lang === "ja" ? "使用データ：東京都（千代田区・新宿区・渋谷区）／台東区、2025年度建築物モデル。ゲーム画面として合成・表示を加工。" : "Data: Tokyo Metropolitan Government (Chiyoda, Shinjuku, Shibuya) and Taito City, FY2025 buildings. Composited and styled for gameplay."}</p><p>Terrain: PLATEAU | Mapterhorn | 国土地理院<br><a href="https://docs.plateauview.mlit.go.jp/datasets/terrain/">PLATEAU Terrain</a></p><p>Imagery: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院 / GSI</a></p><p>Renderer: CesiumJS 1.127.0 — Apache-2.0<br><a href="https://github.com/CesiumGS/cesium/blob/1.127/LICENSE.md">Cesium license</a></p><p>${esc(t("breedNote"))}<br><a href="${catalog.breedSource}">Anicom 2026</a></p><p>${state.lang === "ja" ? "猫モデル制作の参考指定動画（映像自体は同梱していません）" : "User-designated cat reference (video not included)"}<br><a href="https://www.youtube.com/watch?v=Jxv0e1VXSR0">ネコの生態【サクっと解説】</a></p><p>${state.lang === "ja" ? "猫の形と動きの参考（素材自体は同梱していません）" : "Cat anatomy and motion references (reference media not bundled)"}<br><a href="https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping">Eadweard Muybridge / NGA — Public domain</a><br><a href="https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka — CC BY-SA 3.0</a><br><a href="https://github.com/Mesh2Motion/mesh2motion-app">Mesh2Motion — CC0 art and animations</a></p><p>TOKYO-CAT 0.3.0 · Development build</p>`,
+    `<p class="notice">${esc(t("catNote"))}</p><p>${esc(t("dataNote"))}</p><p>${esc(t("tourNote"))}</p><p>3D: <a href="https://www.mlit.go.jp/plateau/">Project PLATEAU</a> / <a href="https://www.mlit.go.jp/plateau/site-policy/">${state.lang === "ja" ? "利用規約" : "Data policy"}</a> / <a href="https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/">Tokyo Digital Twin</a></p><p>${state.lang === "ja" ? "使用データ：東京都（千代田区・新宿区・渋谷区）／台東区、2025年度建築物モデル。ゲーム画面として合成・表示を加工。" : "Data: Tokyo Metropolitan Government (Chiyoda, Shinjuku, Shibuya) and Taito City, FY2025 buildings. Composited and styled for gameplay."}</p><p>Terrain: PLATEAU | Mapterhorn | 国土地理院<br><a href="https://docs.plateauview.mlit.go.jp/datasets/terrain/">PLATEAU Terrain</a></p><p>Imagery: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院 / GSI</a></p><p>Renderer: CesiumJS 1.127.0 — Apache-2.0<br><a href="https://github.com/CesiumGS/cesium/blob/1.127/LICENSE.md">Cesium license</a></p><p>${esc(t("breedNote"))}<br><a href="${catalog.breedSource}">Anicom 2026</a></p><p>${state.lang === "ja" ? "猫モデル制作の参考指定動画（映像自体は同梱していません）" : "User-designated cat reference (video not included)"}<br><a href="https://www.youtube.com/watch?v=Jxv0e1VXSR0">ネコの生態【サクっと解説】</a></p><p>${state.lang === "ja" ? "猫の形と動きの参考（素材自体は同梱していません）" : "Cat anatomy and motion references (reference media not bundled)"}<br><a href="https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping">Eadweard Muybridge / NGA — Public domain</a><br><a href="https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka — CC BY-SA 3.0</a><br><a href="https://github.com/Mesh2Motion/mesh2motion-app">Mesh2Motion — CC0 art and animations</a></p><p>${state.lang === "ja" ? "顔の形状・テクスチャ：Bicolor Cat / kenchoo、原作 Fripouille / guillaume bolis。CC BY 4.0。頭部抽出・細分化・色変更・リグ変更・毛・まぶたの動きを加工。顔の毛並み画像は生成AIで細部を補整。" : "Face mesh/textures: Bicolor Cat by kenchoo, after Fripouille by guillaume bolis. CC BY 4.0. Modified head, subdivision, colour, rig, groom and eyelid animation. Facial texture details refined with generative AI."}<br><a href="https://sketchfab.com/3d-models/bicolor-cat-e623a618ca344a8393d7ba4d63ec23cf">Bicolor Cat</a> / <a href="https://sketchfab.com/3d-models/3d-modelling-my-cat-fripouille-0ab14bf98e754f8d90fe1bf1c84ca66c">Fripouille</a> / <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p>TOKYO-CAT 0.4.0 · Development build</p>`,
     "credits",
   );
 }
@@ -1043,6 +1091,19 @@ $("exit-camera").onclick = () => {
   renderText();
 };
 $("shutter").onclick = capture;
+$("face-focus").onclick = () => {
+  faceFocus = !faceFocus;
+  if (faceFocus) {
+    portraitReturn = { range: photoRange, pitch };
+    photoRange = 1;
+    pitch = -0.03;
+  } else {
+    photoRange = portraitReturn.range;
+    pitch = portraitReturn.pitch;
+  }
+  $("photo-distance").value = String(photoRange);
+  renderText();
+};
 $("pose").onclick = () => {
   seated = !seated;
   renderText();
@@ -1148,12 +1209,26 @@ window.tokyoCatStatus = () => ({
   mode,
   modal,
   position: { ...p },
-  camera: { yaw, pitch, range: mode === "photo" ? photoRange : 4.2 },
+  camera: {
+    yaw,
+    pitch,
+    faceFocus,
+    range:
+      mode === "photo"
+        ? faceFocus
+          ? 0.5 + (photoRange - 1) * 0.15
+          : photoRange
+        : 4.2,
+  },
   visited: Object.keys(state.visited),
   friends: [...state.friends],
   terrainReady,
   tilesReady,
   modelsReady,
+  faceAnimation: {
+    blinkTime: cat?._blinkTime || 0,
+    active: cat?.ready ? cat.activeAnimations.length : 0,
+  },
   performance: {
     samples: frameSamples.length,
     fps: frameSamples.length

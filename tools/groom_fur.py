@@ -1,7 +1,8 @@
 """Deterministic, area-sampled, skinned two-layer fur with a hand-authored groom.
 
 Curved ribbons carry an original alpha atlas of individual tapered strands.
-No photograph, third-party texture or strand simulation is embedded.
+The alpha atlas is authored; facial root colours sample the credited adapted texture.
+Individual strands are not physically simulated.
 """
 
 import io
@@ -68,7 +69,11 @@ def groom(points, normals, breed, head):
     length[chest] = 0.040 if long else 0.015
     length[belly] = 0.033 if long else 0.011
     length[is_head] = 0.008 if long else 0.006
-    length[cheek] = 0.025 if long else 0.013
+    length[cheek] = 0.014 if long else 0.007
+    muzzle = is_head & (relative[:, 0] > 0.035) & (relative[:, 1] < 0.005)
+    length[muzzle] = 0.0035
+    ear = is_head & (relative[:, 1] > 0.032)
+    length[ear] = 0.0035
     # Groom along the body, down the bib, out over the cheeks, towards tail tip.
     direction = np.tile([-1.0, -0.12, 0.0], (len(points), 1))
     direction[chest] = np.column_stack(
@@ -93,8 +98,8 @@ def groom(points, normals, breed, head):
     # Keep the eye aperture, nose leather and lip line unobstructed.
     bare = np.zeros(len(points), dtype=bool)
     for sign in [-1, 1]:
-        eye = head + np.array([0.040, 0.008, sign * 0.035])
-        bare |= np.sum(((points - eye) / [0.022, 0.015, 0.021]) ** 2, axis=1) < 1
+        eye = head + np.array([0.030, 0.007, sign * 0.027])
+        bare |= np.sum(((points - eye) / [0.015, 0.012, 0.014]) ** 2, axis=1) < 1
     bare |= (
         is_head
         & (relative[:, 0] > 0.055)
@@ -139,7 +144,7 @@ def build(g, breed, verts, faces, normals, linear, joint_indices, weights, head)
     # Face, bib and tail receive more roots per square metre than the trunk.
     _, _, regions = groom(centers, normals[faces].mean(axis=1), breed, head)
     importance = np.ones(len(faces))
-    importance[regions["face"]] = 2.0
+    importance[regions["face"]] = 4.0
     importance[regions["chest"]] = 1.7
     importance[regions["tail"]] = 2.4
     prob = area * importance

@@ -1,7 +1,7 @@
 
 io.github.hatake716.tokyocat.FurReviewTest:.
 
-Time: 36.838
+Time: 38.475
 
 OK (1 test)
 

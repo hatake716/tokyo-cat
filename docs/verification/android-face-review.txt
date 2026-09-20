@@ -1,0 +1,8 @@
+
+io.github.hatake716.tokyocat.FaceReviewTest:.
+
+Time: 35.857
+
+OK (1 test)
+
+

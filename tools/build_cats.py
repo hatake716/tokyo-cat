@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Original anatomical development meshes, metres, +X forward, +Y up.
+"""Authored body and groom with a CC BY 4.0 adapted face, metres, +X forward, +Y up.
 No frames or textures from the reference video are embedded.
 Analytical geometry is deliberately labelled authored, not photogrammetry.
 Requires numpy, Pillow, scipy and scikit-image. Emits self-contained GLB with joint hierarchies + clips.
@@ -219,164 +219,13 @@ def tube_mesh(g, curves, mat, sides=5):
     return g.mesh(pos, norm, uv, indices, mat)
 
 
-def ear_surface(u, v, sign, fold):
-    width = 0.025 * (1 - v) ** 0.85 + 0.0015
-    return np.array(
-        [
-            -0.014
-            + 0.016 * (1 - u * u) * (1 - v)
-            + (v * v * 0.030 if fold else -0.008 * v),
-            0.030 + (0.021 if fold else 0.043) * v,
-            sign * (0.044 + v * 0.014 + u * width),
-        ]
-    )
-
-
-def ear_fuzz(g, mat, sign, fold, long):
-    """Small soft tufts on the pinna and rim, following the animated ear node."""
-    rng = np.random.default_rng(476 + sign)
-    points, normals, uv, faces = [], [], [], []
-    for k in range(240):
-        u = rng.uniform(-1, 1)
-        if k < 100:
-            u = rng.choice([-1, 1]) * rng.uniform(0.82, 1)
-        v = rng.uniform(0.05, 0.97)
-        root = ear_surface(u, v, sign, fold)
-        root[0] += 0.002
-        direction = np.array([0.28, 0.7, sign * u * 0.8])
-        direction /= np.linalg.norm(direction)
-        side = np.cross([1, 0, 0], direction)
-        side /= np.linalg.norm(side)
-        length = rng.uniform(0.004, 0.009) * (1 if long else 0.7)
-        width = length * 0.55
-        variant = k % 4
-        base = len(points)
-        for t in [0, 0.5, 1]:
-            center = root + direction * length * t
-            center[0] += 0.0015 * np.sin(t * np.pi)
-            for edge in [-1, 1]:
-                points.append(center + side * width * 0.5 * edge * (1 - 0.6 * t))
-                normals.append([1, 0, 0])
-                uv.append([(variant + (0.02 if edge < 0 else 0.98)) / 4, t * 0.995])
-        for row in range(2):
-            i = base + 2 * row
-            faces.extend([i, i + 2, i + 1, i + 1, i + 2, i + 3])
-    return g.mesh(points, normals, uv, faces, mat)
-
-
-def ear_mesh(g, mat, sign, fold=False, inner=False):
-    # Curved shell with a rolled rim and actual thickness; +X faces forward.
-    p = []
-    uv = []
-    faces = []
-    rings = 10
-    cols = 14
-    for row in range(rings):
-        v = row / (rings - 1)
-        for col in range(cols):
-            u = col / (cols - 1) * 2 - 1
-            point = ear_surface(
-                u * 0.68 if inner else u, 0.12 + v * 0.74 if inner else v, sign, fold
-            )
-            if inner:
-                point[0] += 0.0015
-            p.append(point)
-            uv.append([(u + 1) / 2, v])
-    for row in range(rings - 1):
-        for col in range(cols - 1):
-            a = row * cols + col
-            faces.extend([[a, a + cols, a + 1], [a + 1, a + cols, a + cols + 1]])
-    p = np.array(p)
-    faces = np.array(faces)
-    norm = np.zeros_like(p)
-    for face in faces:
-        n = np.cross(p[face[1]] - p[face[0]], p[face[2]] - p[face[0]])
-        if n[0] < 0:
-            n = -n
-        norm[face] += n
-    norm /= np.maximum(np.linalg.norm(norm, axis=1, keepdims=True), 1e-12)
-    if not inner:
-        count = len(p)
-        back = p.copy()
-        back[:, 0] -= 0.008 * (1 - np.asarray(uv)[:, 1]) + 0.001
-        p = np.concatenate([p, back])
-        norm = np.concatenate([norm, -norm])
-        uv = uv + uv
-        rear = faces[:, [0, 2, 1]] + count
-        faces = np.concatenate([faces, rear])
-    return g.mesh(p, norm, uv, faces.reshape(-1), mat)
-
-
-def eye_mesh(g, sign, mat, rx=0.015, ry=0.0105, depth=0.0035):
-    pos = []
-    norm = []
-    uv = []
-    ix = []
-    normal = np.array([0.79, 0, sign * 0.61])
-    tangent = np.array([-0.61, 0, sign * 0.79])
-    for row in range(8):
-        r = row / 7
-        for k in range(33):
-            a = k / 32 * math.tau
-            v = (
-                tangent * math.cos(a) * rx * r
-                + np.array(
-                    [0, math.sin(a) * ry * r * (0.80 + 0.20 * abs(math.cos(a))), 0]
-                )
-                + normal * depth * (1 - r * r)
-            )
-            pos.append(v)
-            norm.append(normal)
-            uv.append([0.5 + 0.5 * r * math.cos(a), 0.5 + 0.5 * r * math.sin(a)])
-    for row in range(7):
-        for k in range(32):
-            a = row * 33 + k
-            ix.extend([a, a + 1, a + 33, a + 1, a + 34, a + 33])
-    return g.mesh(pos, norm, uv, ix, mat)
-
-
-def iris_texture(blue):
-    u, v = np.meshgrid(np.linspace(-1, 1, 256), np.linspace(-1, 1, 256))
-    r = np.hypot(u, v)
-    a = np.arctan2(v, u)
-    base = np.array([0.24, 0.49, 0.66] if blue else [0.57, 0.60, 0.27])
-    radial = 0.11 * np.sin(a * 83 + np.sin(r * 38)) + 0.05 * np.sin(a * 147)
-    color = base[None, None, :] * (0.88 + radial[:, :, None])
-    color *= np.clip((1 - r) * 6, 0.22, 1)[:, :, None]
-    color[r < 0.22] *= 0.60
-    out = io.BytesIO()
-    Image.fromarray(np.uint8(np.clip(color, 0, 1) * 255)).save(out, format="PNG")
-    return out.getvalue()
-
-
 def make(b, motion):
     g = GLB()
-    g.j["asset"]["generator"] = "TOKYO-CAT authored cat generator 0.3"
+    g.j["asset"]["generator"] = "TOKYO-CAT cat generator 0.4 / CC BY facial adaptation"
     fur = g.material("authored_coat", [1, 1, 1], texture=coat(b))
     cream = g.material("chin", [0.83, 0.81, 0.74])
-    pink = g.material("ear_inner", [0.40, 0.24, 0.23])
-    nosemat = g.material("nose_leather", [0.19, 0.085, 0.075], 0.65)
-    dark = g.material("pupil_and_lid", [0.009, 0.013, 0.012], 0.28)
-    iris = g.material(
-        "radial_iris", [1, 1, 1], 0.16, iris_texture(b["id"] == "ragdoll")
-    )
-    glint = g.material("corneal_catchlight", [0.94, 0.98, 1], 0.09)
-    whisker = g.material("whisker", [0.48, 0.47, 0.42])
-    sp = {m: sphere(g, m) for m in [fur, cream, dark, glint]}
-    earfur = g.material(
-        "ear_back_fur",
-        [int(b["color"][i : i + 2], 16) / 255 * 0.48 for i in [1, 3, 5]],
-        0.98,
-    )
-    from groom_fur import strand_atlas
-
-    earcoat = g.material(
-        "ear_soft_fur",
-        [int(b["color"][i : i + 2], 16) / 255 * 0.60 for i in [1, 3, 5]],
-        0.97,
-        strand_atlas(),
-    )
-    g.j["materials"][earcoat]["alphaMode"] = "BLEND"
+    whisker = g.material("whisker", [0.62, 0.60, 0.55], 0.97)
+    sp = {m: sphere(g, m) for m in [fur, cream]}
     bulk = b["body"]
     leg = b["legs"]
     y = 0.267 * leg + 0.002
@@ -396,108 +245,37 @@ def make(b, motion):
         "neck", sp[fur], (0.201, y + 0.062, 0), (0.046, 0.059 * fluff, 0.052 * fluff)
     )
     head = g.node("head", None, (0.236, y + 0.098, 0))
-    roundness = 1.13 if b["id"] in ["british", "scottish", "minuet"] else 1
-    g.node(
-        "cranium",
-        sp[fur],
-        (-0.006, 0, 0),
-        (0.061, 0.052 * roundness, 0.061 * roundness),
-        head,
-    )
-    g.node(
-        "cheeks", sp[fur], (0.022, -0.020, 0), (0.039, 0.035, 0.057 * roundness), head
-    )
-    g.node("bridge", sp[fur], (0.042, -0.003, 0), (0.029, 0.029, 0.025), head)
-    for side, z in [("left", -1), ("right", 1)]:
-        g.node(
-            "muzzle", sp[cream], (0.054, -0.026, z * 0.016), (0.023, 0.018, 0.020), head
-        )
-        eye = g.node("eye_" + side, None, (0.040, 0.008, z * 0.035), parent=head)
-        g.node("eyelid_edge", eye_mesh(g, z, dark, 0.0157, 0.0112, 0.0035), parent=eye)
-        g.node("iris", eye_mesh(g, z, iris), pos=(0.001, 0, z * 0.001), parent=eye)
-        g.node(
-            "pupil",
-            eye_mesh(g, z, dark, 0.0052, 0.0083, 0.001),
-            pos=(0.0039, 0, z * 0.003),
-            parent=eye,
-        )
-        g.node(
-            "eye_light",
-            sp[glint],
-            (0.0045, 0.0032, z * 0.0036),
-            (0.0016, 0.0018, 0.0014),
-            eye,
-        )
-        ear = g.node("ear_" + side, parent=head)
-        g.node("ear_shell", ear_mesh(g, earfur, z, b["fold"]), parent=ear)
-        g.node("ear_concha", ear_mesh(g, pink, z, b["fold"], True), parent=ear)
-        g.node("ear_fuzz_" + side, ear_fuzz(g, earcoat, z, b["fold"], long), parent=ear)
-        # Rolled outer ear rim prevents a paper-thin triangular silhouette.
-        rim = []
-        for direction in [-1, 1]:
-            rim.append(
-                (
-                    [
-                        ear_surface(direction, v, z, b["fold"])
-                        for v in np.linspace(0, 1, 14)
-                    ],
-                    0.0016,
-                )
-            )
-        g.node("ear_rim", tube_mesh(g, rim, earfur), parent=ear)
+    for side, sign in [("left", -1), ("right", 1)]:
+        g.node("eye_" + side, parent=head)
+        g.node("ear_" + side, parent=head)
         whiskers = []
-        for k in range(7):
+        for k in range(12):
             start = np.array(
-                [0.067, -0.022 + (k % 3) * 0.003, z * (0.022 + (k % 2) * 0.003)]
+                [0.058, -0.030 + (k % 4) * 0.003, sign * (0.021 + (k // 4) * 0.003)]
             )
             end = np.array(
                 [
-                    0.035 - k * 0.004,
-                    -0.025 + (k - 3) * 0.009,
-                    z * (0.095 + (k % 3) * 0.007),
+                    0.026 - (k // 4) * 0.004,
+                    -0.022 + (k - 6) * 0.004,
+                    sign * (0.083 + (k % 4) * 0.008),
                 ]
             )
             pts = [
                 start * (1 - t)
                 + end * t
-                + np.array([0.016 * math.sin(t * math.pi), -0.007 * t * t, 0])
-                for t in np.linspace(0, 1, 9)
+                + np.array([0.015 * math.sin(t * math.pi), -0.004 * t * t, 0])
+                for t in np.linspace(0, 1, 13)
             ]
-            whiskers.append((pts, 0.00030))
+            whiskers.append((pts, 0.00018))
         for k in range(3):
-            start = np.array([0.014, 0.035, z * 0.034])
-            end = np.array([0.001, 0.067 + k * 0.004, z * (0.075 + k * 0.003)])
+            start = np.array([0.020, 0.022, sign * 0.031])
+            end = np.array([0.008, 0.050 + k * 0.004, sign * (0.072 + k * 0.004)])
             whiskers.append(
-                (
-                    [
-                        start * (1 - t)
-                        + end * t
-                        + np.array([0.009 * math.sin(t * math.pi), 0, 0])
-                        for t in np.linspace(0, 1, 7)
-                    ],
-                    0.00023,
-                )
+                ([start * (1 - t) + end * t for t in np.linspace(0, 1, 9)], 0.00014)
             )
-        g.node("whiskers", tube_mesh(g, whiskers, whisker), parent=head)
-    nose = g.mesh(
-        [
-            [0.075, -0.014, -0.009],
-            [0.075, -0.014, 0.009],
-            [0.078, -0.024, 0],
-            [0.068, -0.017, 0],
-        ],
-        [[1, 0, 0]] * 4,
-        [[0, 0], [1, 0], [0.5, 1], [0.5, 0.5]],
-        [0, 1, 2, 0, 3, 1, 0, 2, 3, 1, 3, 2],
-        nosemat,
-    )
-    g.node("nose", nose, parent=head)
-    mouth = [
-        ([[0.074, -0.023, 0], [0.073, -0.032, 0], [0.066, -0.035, -0.013]], 0.0006),
-        ([[0.073, -0.032, 0], [0.066, -0.035, 0.013]], 0.0006),
-    ]
-    g.node("mouth", tube_mesh(g, mouth, dark), parent=head)
-    g.node("chin", sp[cream], (0.050, -0.042, 0), (0.023, 0.012, 0.026), head)
+        g.node(
+            "whiskers_" + side, tube_mesh(g, whiskers, whisker, sides=6), parent=head
+        )
     for prefix, x in [("front", 0.158), ("rear", -0.174)]:
         for side, z in [("left", -0.055), ("right", 0.055)]:
             name = prefix + "_" + side
@@ -617,7 +395,7 @@ def make(b, motion):
         )
     g.j["extras"] = {
         **g.j.get("extras", {}),
-        "provenance": "Original authored development model; reference-informed, not a scan or CGTrader asset",
+        "provenance": "Authored body, rig and groom with CC BY 4.0 face adapted from Fripouille / Bicolor Cat; not a scan",
         "reference": "https://www.youtube.com/watch?v=Jxv0e1VXSR0",
         "additionalReferences": [
             "https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping",

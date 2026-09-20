@@ -51,9 +51,11 @@ test("ten unique breeds, actual GLBs and provenance", () => {
     assert.ok(j.nodes.some((n) => n.name === "tail2"));
     assert.deepEqual(
       j.animations.map((x) => x.name),
-      ["Idle", "Walk", "Trot", "Greet", "Sit"],
+      ["Blink", "Idle", "Walk", "Trot", "Greet", "Sit"],
     );
-    assert.ok(j.extras.provenance.includes("Original"));
+    assert.ok(j.extras.provenance.includes("CC BY 4.0"));
+    assert.equal(j.extras.face.license, "CC-BY-4.0");
+    assert.ok(j.extras.face.source.includes("guillaume bolis"));
     for (const a of j.accessors)
       if (a.type === "VEC3") assert.ok(a.min.every(Number.isFinite));
   }

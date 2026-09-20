@@ -1,7 +1,7 @@
 
 io.github.hatake716.tokyocat.GameFlowTest:.
 
-Time: 10.311
+Time: 11.398
 
 OK (1 test)
 

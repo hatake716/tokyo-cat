@@ -1,6 +1,6 @@
 # Free references observed for the 0.2 cat revision
 
-Checked 2026-09-20/21. References inform the original authored models. Photographs, videos, downloaded third-party meshes and their textures are not packaged in the APK or published in this repository.
+Checked 2026-09-20/21. The observational references listed on this page inform the authored body and locomotion. These reference photographs, videos and animal meshes are not packaged. The separately adopted CC BY facial mesh and textures in 0.4 are documented in [cat-face/source.json](../cat-face/source.json) and [FACE.md](../../FACE.md).
 
 | Work | Creator / source | Terms at source | Actual use |
 | --- | --- | --- | --- |
@@ -11,4 +11,4 @@ Checked 2026-09-20/21. References inform the original authored models. Photograp
 
 The first user-designated video remains recorded in [cat-video-reference.json](../cat-video-reference.json). No source here is represented as a multi-view scan, anatomical measurement dataset or motion-capture recording. BlendSwap / CGTrader login-gated files were not downloaded or included. The downloaded reference files are kept in the ignored `private-assets/free-reference/` directory locally.
 
-The production geometry, fur albedo/normal maps, iris pattern and movement functions were authored for TOKYO-CAT. See [CAT_MODELS.md](../../CAT_MODELS.md) for the resulting changes and remaining limits.
+The body, groom and movement functions were authored for TOKYO-CAT. Version 0.4 replaces the original face with the separately credited CC BY adaptation. See [CAT_MODELS.md](../../CAT_MODELS.md) for the resulting changes and remaining limits.

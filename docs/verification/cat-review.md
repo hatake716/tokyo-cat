@@ -1,6 +1,6 @@
 # 猫モデルのAndroid表示確認
 
-2026-09-21、0.3.0-dev。最終GLBをAndroid Emulator / Cesium上で描画し、実際のタッチ操作で視点と姿勢を変更して撮影しました。写真品質の認定ではなく、モデルの表示・品種差・姿勢を確認する記録です。スクリーンショットは無加工です。
+2026-09-21、0.4.0-dev。最終GLBをAndroid Emulator / Cesium上で描画し、実際のタッチ操作で視点と姿勢を変更して撮影しました。写真品質の認定ではなく、モデルの表示・品種差・姿勢を確認する記録です。スクリーンショットは無加工です。
 
 | 猫 | 正面 | 横 | 座位 |
 | --- | --- | --- | --- |
@@ -17,14 +17,24 @@
 
 歩行・走行の連続フレームは `screenshots/motion-walk-*.png` と `screenshots/motion-run-*.png`。足の接地の数値検証は [model-validation.txt](model-validation.txt) と [core-tests.txt](core-tests.txt) を参照。
 
-10種類の表示検査で使ったGLBは最終APKのモデルと同じです。0.3では撮影中のNPC静止、全体操作、プロセス再起動も最終APKで検査しています。
+10種類の表示検査で使ったGLBは最終APKのモデルと同じです。0.4では撮影中のNPC静止、全体操作、プロセス再起動も最終APKで検査しています。
 
-## もふもふの毛の接近表示
+## 顔の接写とまばたき
 
-[FurReviewTestの操作ログ](android-fur-review.txt)。ラグドールの下毛・差し毛、胸元・頬・尾、耳の毛を確認しました。毛は半透明の湾曲した束で、体表の関節に追従します。独立した毛の物理計算ではありません。
+[FaceReviewTestの操作ログ](android-face-review.txt)。Android上で正面・斜め・横を表示し、自然に進行するBlinkを待って記録しました。生成テクスチャやBlenderのレンダーをゲーム画面として掲載したものではありません。
 
-![斜めから見た長毛](screenshots/fur-three-quarter.png)
+![顔の接写](screenshots/face-front.png)
+
+[斜め](screenshots/face-three-quarter.png) / [横顔](screenshots/face-side.png) / [まぶたが閉じた瞬間](screenshots/face-blink-0.png)
+
+顔・鼻・口元・まぶたの形と毛の細部は0.3から変更しています。一方、目の光学表現や首との色のつながりなどには改良の余地があり、実写同等の完成品質とは評価していません。[仕様と制作元](../FACE.md)。
+
+## 毛と全身
+
+[FurReviewTestの操作ログ](android-fur-review.txt)。下毛・差し毛、胸元・頬・尾を確認しています。毛は半透明の湾曲した束で、体表の関節に追従します。独立した毛の物理計算ではありません。
+
+![全身の斜め表示](screenshots/fur-three-quarter.png)
 
 [正面](screenshots/fur-front.png) / [横](screenshots/fur-side.png) / [座位](screenshots/fur-seated.png)
 
-同じ場面の[測定値](fur-performance.json)は平均29.82fps、p95 58.9ms（180描画間隔、標準画質、目標30fps）。エミュレーターの測定で、実機性能の保証ではありません。
+描画測定は顔の接写で20.76fps / p95 87.1ms、全身の接近表示で21.26fps / p95 78.1ms。各180描画間隔、標準画質、目標30fps。詳細は [VALIDATION.md](../VALIDATION.md)。エミュレーターの特定場面の値で、実機性能の保証ではありません。

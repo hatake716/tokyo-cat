@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 
 root = Path(__file__).resolve().parents[1] / "app/src/main/assets/game/models"
+face_reference = np.load(Path(__file__).parent / "assets/cat-face/face-base.npz")
 for info in json.loads((root / "manifest.json").read_text()):
     if (
         os.environ.get("TOKYO_CAT_VERIFY_BREED")
@@ -36,7 +37,7 @@ for info in json.loads((root / "manifest.json").read_text()):
     for i in range(len(j["accessors"])):
         accessor(i)
     skin = j["skins"][0]
-    assert len(skin["joints"]) >= 15
+    assert len(skin["joints"]) == 26
     assert accessor(skin["inverseBindMatrices"]).shape[0] == len(skin["joints"])
     assert all(
         any(j["nodes"][i]["name"] == leg + "_paw" for i in skin["joints"])
@@ -103,12 +104,38 @@ for info in json.loads((root / "manifest.json").read_text()):
                     ), "Fur winding must face away from skin"
 
     assert [a["name"] for a in j["animations"]] == [
+        "Blink",
         "Idle",
         "Walk",
         "Trot",
         "Greet",
         "Sit",
     ]
+    assert j["extras"]["face"]["license"] == "CC-BY-4.0"
+    for part in ["sculpted_face", "sculpted_eyes"]:
+        node = next(n for n in j["nodes"] if n["name"] == part)
+        assert node["skin"] == 0
+        primitive = j["meshes"][node["mesh"]]["primitives"][0]
+        assert len(primitive["targets"]) == 1
+        at = primitive["attributes"]
+        delta = accessor(primitive["targets"][0]["POSITION"])
+        assert delta.shape == accessor(at["POSITION"]).shape
+        assert np.max(np.abs(delta)) > (0.004 if part == "sculpted_face" else 0.002)
+        assert np.allclose(np.linalg.norm(accessor(at["NORMAL"]), axis=1), 1, atol=0.01)
+        # Cross products alone would allow a consistently inverted surface to
+        # pass. Compare with the source artist's outward normals as well.
+        source_part = "face" if part == "sculpted_face" else "eyes"
+        ref = face_reference[source_part + "_normal"]
+        expected = np.column_stack([-ref[:, 1], ref[:, 2], ref[:, 0]])
+        unbent = face_reference[source_part + "_position"][:, 2] < 0.326
+        alignment = np.sum(accessor(at["NORMAL"]) * expected, axis=1)
+        assert (
+            np.quantile(alignment[unbent], 0.01) > 0.90
+        ), "Face normals must point outward after coordinate conversion"
+        mat = j["materials"][primitive["material"]]
+        assert "baseColorTexture" in mat["pbrMetallicRoughness"]
+        if part == "sculpted_face":
+            assert "normalTexture" in mat
     # Validate the exported joint transforms, not only the runtime equations.
     parents = {c: i for i, n in enumerate(j["nodes"]) for c in n.get("children", [])}
 
@@ -132,6 +159,22 @@ for info in json.loads((root / "manifest.json").read_text()):
         in ["front_left_paw", "front_right_paw", "rear_left_paw", "rear_right_paw"]
     ]
     for clip in j["animations"]:
+        if clip["name"] == "Blink":
+            assert len(clip["channels"]) == 2
+            assert {
+                j["nodes"][ch["target"]["node"]]["name"] for ch in clip["channels"]
+            } == {"sculpted_face", "sculpted_eyes"}
+            for ch in clip["channels"]:
+                assert ch["target"]["path"] == "weights"
+                sampler = clip["samplers"][ch["sampler"]]
+                times, values = accessor(sampler["input"]), accessor(sampler["output"])
+                assert len(times) == len(values) == 61
+                assert np.all(np.diff(times[:, 0]) > 0)
+                assert np.isclose(times[-1, 0], 5.7)
+                assert values.min() >= 0 and 0.95 <= values.max() <= 1
+                assert values[0, 0] == values[-1, 0] == 0
+            # A standalone facial clip does not pose the bind-state feet.
+            continue
         channels = []
         for ch in clip["channels"]:
             sm = clip["samplers"][ch["sampler"]]

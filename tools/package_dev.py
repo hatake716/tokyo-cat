@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package the already-built developer APK and authored cat models; verify contents."""
+"""Package the built developer APK and cat models with adapted-face attribution."""
 
 import hashlib
 import json
@@ -38,7 +38,13 @@ with zipfile.ZipFile(apk) as archive:
             ).hexdigest()
             == model["sha256"]
         )
-    for runtime in ["game.mjs", "cat-motion.mjs", "fur-light.mjs"]:
+    for runtime in [
+        "game.mjs",
+        "cat-motion.mjs",
+        "fur-light.mjs",
+        "i18n.mjs",
+        "index.html",
+    ]:
         assert (
             archive.read("assets/game/" + runtime)
             == (ROOT / "app/src/main/assets/game" / runtime).read_bytes()
@@ -46,6 +52,10 @@ with zipfile.ZipFile(apk) as archive:
     code = archive.read("assets/game/game.mjs")
     assert b"forwardAxis: C.Axis.X" in code
     assert b"useBrowserRecommendedResolution = false" in code
+    assert b"guillaume bolis" in archive.read("assets/game/models/ATTRIBUTION.md")
+    assert b"Creative Commons" in archive.read(
+        "assets/game/models/LICENSE-CC-BY-4.0.txt"
+    )
 
 with zipfile.ZipFile(
     OUT / f"TOKYO-CAT-cat-models-{VERSION}.zip", "w", zipfile.ZIP_DEFLATED
@@ -54,12 +64,15 @@ with zipfile.ZipFile(
         archive.write(path, path.name)
     archive.write(ROOT / "docs/CAT_MODELS.md", "README.md")
     archive.write(ROOT / "docs/FUR.md", "FUR.md")
+    archive.write(ROOT / "docs/FACE.md", "FACE.md")
     archive.write(
         ROOT / "docs/sources/cat-video-reference.json",
         "sources/cat-video-reference.json",
     )
     for path in sorted((ROOT / "docs/sources/cat-reference").iterdir()):
         archive.write(path, "sources/cat-reference/" + path.name)
+    for path in sorted((ROOT / "docs/sources/cat-face").iterdir()):
+        archive.write(path, "sources/cat-face/" + path.name)
     archive.writestr(
         "breeds.json",
         json.dumps(catalog["breeds"], ensure_ascii=False, indent=2) + "\n",
