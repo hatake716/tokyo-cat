@@ -2,81 +2,81 @@
   {
     "id": "scottish",
     "file": "scottish.glb",
-    "sha256": "70e651b677e6fb1a28a20e21e9ae965d4fca375ca0786e8bb26c232f8719cd0a",
-    "bytes": 3032808,
-    "nodes": 75,
-    "triangles": 68048
+    "sha256": "c7381d0779f5878066304fe373dd928ae50d5dcf335e4c9663a6e969fc696e40",
+    "bytes": 4324816,
+    "nodes": 84,
+    "triangles": 73860
   },
   {
     "id": "mixed",
     "file": "mixed.glb",
-    "sha256": "4080b115c0de0df14d0eac6adf3cc8ff35f1998eab29b89309ae5bf44bb0d64c",
-    "bytes": 2995788,
-    "nodes": 75,
-    "triangles": 67044
+    "sha256": "15ea42cf6b54d3431a80a0d338e47a5bcaa1c2342dcfdd2afa63da8dd264b258",
+    "bytes": 4294456,
+    "nodes": 84,
+    "triangles": 73088
   },
   {
     "id": "munchkin",
     "file": "munchkin.glb",
-    "sha256": "5fe2ba3465fe241c9b3774e6d3c3227ecaf8febf2e34c53251a69daf2cd718f3",
-    "bytes": 2775700,
-    "nodes": 75,
-    "triangles": 61796
+    "sha256": "bfb91b298c37e5b86a288cc0dc08651a870258f16c314a0c3b8529d551c6c8b6",
+    "bytes": 3957352,
+    "nodes": 84,
+    "triangles": 65752
   },
   {
     "id": "ragdoll",
     "file": "ragdoll.glb",
-    "sha256": "2976b4113c4ba3a63c11688e6deb067c0b984f268944ca645cc30ae3b5a6251b",
-    "bytes": 3256628,
-    "nodes": 76,
-    "triangles": 71992
+    "sha256": "46f124ee29ca390cb1382c0045d86daedf59ffbb596556fe0530c7a1eff9ade3",
+    "bytes": 4749432,
+    "nodes": 84,
+    "triangles": 78736
   },
   {
     "id": "minuet",
     "file": "minuet.glb",
-    "sha256": "31e995d9c5e0ec16012a05e221e28448d916600f070dafd06c064e3f39de662e",
-    "bytes": 3141816,
-    "nodes": 76,
-    "triangles": 69028
+    "sha256": "7908f89a335705e96e1bd1629b22114bb7dd2f135a8e1d4bc0588bdb99efe5ff",
+    "bytes": 4531308,
+    "nodes": 84,
+    "triangles": 73764
   },
   {
     "id": "siberian",
     "file": "siberian.glb",
-    "sha256": "a30fac75b7e197d3b7f70725fab9030a3c269aeebda91d083c22218c570c6ac4",
-    "bytes": 3369636,
-    "nodes": 76,
-    "triangles": 75108
+    "sha256": "f71f478bcfb2b6f6210825218f6ecac442d5d7abb164f424108a72f87aae64b1",
+    "bytes": 4864732,
+    "nodes": 84,
+    "triangles": 81616
   },
   {
     "id": "british",
     "file": "british.glb",
-    "sha256": "8933e3d692d1564ad9a71fe8318ab765235a1e83bf17503b1daa57fe531d9294",
-    "bytes": 3116956,
-    "nodes": 75,
-    "triangles": 70324
+    "sha256": "a7c81988a602745c53dd6cd0646dbd4a055a8ca290f913979d555b216cfe44e7",
+    "bytes": 4400032,
+    "nodes": 84,
+    "triangles": 75740
   },
   {
     "id": "american",
     "file": "american.glb",
-    "sha256": "c98153ee3299bf25503cc0be6e9f63b5656c0de9c6b0f496620f095fe1a3c207",
-    "bytes": 3001112,
-    "nodes": 75,
-    "triangles": 67044
+    "sha256": "dc94eac9eb296e1374228c7655c8aaf33f10b8c3b8418e630e75f4db37291cd5",
+    "bytes": 4299776,
+    "nodes": 84,
+    "triangles": 73088
   },
   {
     "id": "norwegian",
     "file": "norwegian.glb",
-    "sha256": "7478dc5711a6b791dc93a9b5db4c0ec1ccdcd62443d95169e93df522c69dcd6e",
-    "bytes": 3414044,
-    "nodes": 76,
-    "triangles": 76060
+    "sha256": "1b7e588733ae50807d12dfa967635bbb177c4ec577f91d2db2fd923dfb636cc7",
+    "bytes": 4962820,
+    "nodes": 84,
+    "triangles": 83652
   },
   {
     "id": "ragamuffin",
     "file": "ragamuffin.glb",
-    "sha256": "ef25e2854ed13398876548ab1a0c8d310853508d52e720120015a5f145a5e623",
-    "bytes": 3418932,
-    "nodes": 76,
-    "triangles": 75936
+    "sha256": "1214fcf071ea856eb69a5d2e7142af98dbc8a91f024a975065511039b31c9fda",
+    "bytes": 4927076,
+    "nodes": 84,
+    "triangles": 82652
   }
 ]

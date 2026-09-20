@@ -1,10 +1,10 @@
-PASS scottish: 31334 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS mixed: 30832 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS munchkin: 28208 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS ragdoll: 33006 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS minuet: 31524 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS siberian: 34564 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS british: 32472 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS american: 30832 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS norwegian: 35040 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
-PASS ragamuffin: 34978 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS scottish: 31632 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS mixed: 31246 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS munchkin: 27578 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS ragdoll: 33170 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS minuet: 30684 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS siberian: 34610 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS british: 32572 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS american: 31246 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS norwegian: 35628 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256
+PASS ragamuffin: 35128 vertices, 24 joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256

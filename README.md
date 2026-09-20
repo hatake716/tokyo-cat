@@ -1,8 +1,14 @@
 # TOKYO-CAT
 
-東京を野良猫として歩く Android 向け3D探索ゲーム。**0.1.0-dev / 開発版**。
+東京を野良猫として歩く Android 向け3D探索ゲーム。**0.2.0-dev / 開発版**。
 
-丸の内・新宿・渋谷・浅草・秋葉原を、PLATEAUの実在する建物・地形データで表示します。観光、猫への挨拶、撮影とアルバムを実装しています。猫は、ユーザー指定の動画を参考に独自制作した10区分のスキン付きGLBです。**猫の写実表現、毛の質感、品種ごとの解剖学的精度・モーションは引き続き改良が必要です。完成したフォトリアル作品という位置づけではありません。**
+丸の内・新宿・渋谷・浅草・秋葉原を、PLATEAUの実在する建物・地形データで表示します。観光、猫への挨拶、撮影とアルバムを実装しています。猫は、ユーザー指定動画と無料の参照資料をもとに独自制作した10区分のスキン付きGLBです。**猫の写実表現、毛の質感、品種ごとの解剖学的精度・モーションは引き続き改良が必要です。完成したフォトリアル作品という位置づけではありません。**
+
+## 0.2の猫表現
+
+頭と口元を小さくし、肩から背中、細い脚と足先の形を見直しました。耳の曲面と縁、瞳の模様、細い曲線のひげ、毛の凹凸とスキンに追従する輪郭の毛を追加しています。歩幅と実際の移動距離を揃えて接地中の足の滑りを抑え、まばたき、呼吸、耳、5節の尾も動きます。GLBのIdle / Walk / Trot / Greet / Sitはゲームと共通の姿勢計算から生成します。
+
+パブリックドメインの猫の連続写真、CC BY-SAの猫写真、CC0の四足動物アニメーションを観察参考にしています。[参照元と利用範囲](docs/sources/cat-reference/README.md)を記録しました。
 
 ## 起動と操作
 
@@ -35,7 +41,7 @@ JDK 17、Android SDK 36。SDKパスを `local.properties` に設定してくだ�
 
 ```bash
 ./gradlew assembleDebug assembleDebugAndroidTest lintDebug
-node --test tests/core.test.mjs
+node --test tests/*.test.mjs
 python3 tools/check_sources.py
 ```
 
@@ -49,7 +55,7 @@ adb shell am instrument -w -e class io.github.hatake716.tokyocat.GameFlowTest \
   io.github.hatake716.tokyocat.test/androidx.test.runner.AndroidJUnitRunner
 ```
 
-猫モデル再生成には `tools/model-requirements.txt` のPython依存が必要です。
+猫モデル再生成にはNode.jsと `tools/model-requirements.txt` のPython依存が必要です。`TOKYO_CAT_NODE` でNodeのパスを指定できます。
 
 ```bash
 python3 tools/build_cats.py
@@ -73,8 +79,8 @@ python3 tools/verify_models.py
 - 当たり判定は読み込み済みタイルに対するレイ判定です。キャラクター全体の物理形状、階段、段差、複雑な路地、全経路の安全なスポーンには改良が必要です。
 - 猫のモデルとモーションは手続き的な独自制作です。動画からの写真測量やモーションキャプチャではありません。10区分の体格・毛色の差を実装していますが、実写同等の毛並みや品種の正確な個体再現は未達です。
 - 地図の初回読み込みには通信が必要です。配信サービスの停止時には再試行表示になります。アルバムと解説の閲覧は地図ロードとは独立しています。
-- 公開リリース署名、Play Consoleへの提出、GitHub公開、物理端末での長時間性能・操作検証は今回行っていません。
+- 公開リリース署名、Play Consoleへの提出、物理端末での長時間性能・操作検証は今回行っていません。
 
 出典・利用条件は [docs/ASSETS.md](docs/ASSETS.md)、モデル単体の仕様は [docs/CAT_MODELS.md](docs/CAT_MODELS.md)、検証結果は [docs/VALIDATION.md](docs/VALIDATION.md) を参照してください。
 
-ビルド後に `python3 tools/package_dev.py` を実行すると、`artifacts/0.1.0-dev/` にAPK、猫モデルZIP、SHA256SUMS.txtを作成します。
+ビルド後に `python3 tools/package_dev.py` を実行すると、`artifacts/0.2.0-dev/` にAPK、猫モデルZIP、SHA256SUMS.txtを作成します。

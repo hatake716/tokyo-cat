@@ -118,45 +118,4 @@ export function validSave(raw, catalog) {
   };
 }
 
-// Authored locomotion, not motion capture. Foot stance/swing and two-link IK.
-// cycle is advanced by travelled metres, so stopping does not keep cycling feet.
-export function gaitPose(cycle, speed, legScale = 1) {
-  const trot = speed > 1.7,
-    duty = trot ? 0.5 : 0.66;
-  const phases = trot
-    ? { front_left: 0, rear_right: 0, front_right: 0.5, rear_left: 0.5 }
-    : { rear_left: 0, front_left: 0.25, rear_right: 0.5, front_right: 0.75 };
-  const stride = (trot ? 0.16 : 0.115) * Math.min(1, speed / 0.8) * legScale;
-  const result = {};
-  for (const [name, phase] of Object.entries(phases)) {
-    const u = (((cycle + phase) % 1) + 1) % 1;
-    const stance = u < duty;
-    const swing = (u - duty) / (1 - duty);
-    const x = stance ? stride * (0.5 - u / duty) : stride * (-0.5 + swing);
-    const lift = stance
-      ? 0
-      : Math.sin(swing * Math.PI) *
-        (trot ? 0.065 : 0.042) *
-        legScale *
-        Math.min(1, speed / 0.6);
-    const a = 0.13 * legScale,
-      b = 0.15 * legScale;
-    const y = -(a + b - 0.01 * legScale * Math.min(1, speed / 0.8)) + lift;
-    const r = Math.min(a + b - 0.0001, Math.hypot(x, y));
-    const alpha = Math.acos(
-      clamp((a * a + r * r - b * b) / (2 * a * r), -1, 1),
-    );
-    const beta =
-      Math.PI - Math.acos(clamp((a * a + b * b - r * r) / (2 * a * b), -1, 1));
-    const sign = name.startsWith("front") ? -1 : 1;
-    const hip = Math.atan2(x, -y) - sign * alpha;
-    result[name] = {
-      hip,
-      knee: sign * beta,
-      ankle: -hip - sign * beta,
-      stance,
-      lift,
-    };
-  }
-  return result;
-}
+export { gaitPose } from "./cat-motion.mjs";

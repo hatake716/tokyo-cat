@@ -1,0 +1,26 @@
+{
+  "muybridge-720.jpg": {
+    "bytes": 724650,
+    "sha256": "cbbc5ee5338437aef157c153acbf21c6fa03b0e05cece50930357e63199b3380"
+  },
+  "cat-on-snow.jpg": {
+    "bytes": 2125399,
+    "sha256": "74d09a7c6463a844572c58634a798d4fa1b646aeff8be81a42ab68915e54e049"
+  },
+  "fox-animations.glb": {
+    "bytes": 788588,
+    "sha256": "80e80641a5692a14aba7616a46d2a28d3595479764887c578c766b99dba8a0d0"
+  },
+  "mesh2motion-cat.glb": {
+    "bytes": 278560,
+    "sha256": "0470928f92afae5331454951bab2a1159e929265843192a9f247b5639ba90625"
+  },
+  "mesh2motion-cat.png": {
+    "bytes": 33041,
+    "sha256": "37666ee8e664786241698595a874e769012c748a81b7ba6de559c8ab0b567a9d"
+  },
+  "Mesh2Motion-CC0.md": {
+    "bytes": 294,
+    "sha256": "52fec1c484df708c16b4c27b2bf0d7f0d3994105c57adc4b9e6f95bcfd9de65f"
+  }
+}

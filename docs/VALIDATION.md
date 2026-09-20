@@ -1,11 +1,11 @@
-# TOKYO-CAT 0.1.0-dev 検証記録
+# TOKYO-CAT 0.2.0-dev 検証記録
 
-検証日：2026-09-20。これは動作する開発版の検証です。フォトリアル品質の完成、実機での性能保証、ストア公開の証明ではありません。
+検証日：2026-09-21。これは動作する開発版の検証です。フォトリアル品質の完成、実機での性能保証、ストア公開の証明ではありません。
 
 ## 実行環境とビルド
 
 - アプリID：`io.github.hatake716.tokyocat`
-- versionName：`0.1.0-dev`、versionCode：`1`
+- versionName：`0.2.0-dev`、versionCode：`2`
 - JDK 17、Gradle 8.14.3、Android Gradle Plugin 8.13.0
 - compileSdk / targetSdk 36、minSdk 29（Android 10）
 - Android Emulator API 35、2400 × 1080、ホストGPUを利用。端末指定は `emulator-5554`。
@@ -17,8 +17,8 @@ APKは開発用証明書で署名され、署名検証を通過しています�
 
 ## ゲームロジック・モデル
 
-- Node.js の **24テスト成功**。5地区・15地点・10モデル、翻訳キー、メートル単位の地理移動、走行速度、斜め移動、境界、発見範囲、挨拶距離、不正セーブの復旧、保存の往復、歩行・速歩の脚運び、停止時の接地を検査。
-- **10 GLBすべて検査成功**。ファイル長・SHA-256、アクセサの参照範囲、有限値、スキンのウェイト和、22ジョイントの参照、法線と面の表裏の整合性、埋め込み素材、制作元のメタデータを検査。
+- Node.js の **30テスト成功**。5地区・15地点・10モデル、翻訳キー、メートル単位の地理移動、走行速度、斜め移動、境界、発見範囲、挨拶距離、不正セーブの復旧、保存の往復、歩行・速歩の脚運び、停止時の接地を検査。追加テストでは、定速で接地足が前進量を相殺すること、全脚長でIKが足の目標点へ届くこと、離地・着地の速度連続性、脚長と歩幅、まばたき・呼吸・耳、座位への遷移中の接地を検査。
+- **10 GLBすべて検査成功**。ファイル長・SHA-256、アクセサの参照範囲、有限値、スキンのウェイト和、24ジョイントの参照、法線と面の表裏の整合性、埋め込み素材、制作元のメタデータを検査。毛カードのスキン、法線テクスチャ、5クリップのループも検査。全クリップ・全61フレームについてGLBに記録された関節変換を合成し、足の支点が地面を下回らないことと、静止・座位の接地を確認。
 - 配布APKをZIPとして開き、収録した5地区・15地点・10GLB、モデルSHA-256、最終描画設定を確認。動画・音声ファイルの混入なし。
 
 証拠：[core-tests.txt](verification/core-tests.txt)、[model-validation.txt](verification/model-validation.txt)、[artifacts.json](verification/artifacts.json)、[apk-signature.txt](verification/apk-signature.txt)、[apk-badging.txt](verification/apk-badging.txt)。
@@ -40,6 +40,10 @@ APKは開発用証明書で署名され、署名検証を通過しています�
 9. Activityを再作成し、猫の選択、観光記録、保存した写真を復元できること。
 
 さらに `adb shell am force-stop io.github.hatake716.tokyocat` の後、別の計測プロセスで `GameFlowTest#restoreAfterProcessRestart` を実行。猫種・雷門の記録・友だち・写真がプロセス終了をまたいで復元されることを確認しています。
+
+`CatVisualTest#inspectCatsAndMovement` は、10種類を順に選択し、カメラの距離と向きをタッチで調整して正面・横・座位を撮影します。歩行・走行・停止の連続スクリーンショットも記録し、描画エラーがないことを検査します。JSからの姿勢や座標の注入は行いません。ログは [android-cat-visual.txt](verification/android-cat-visual.txt)。全10種類の比較画像は [cat-review.md](verification/cat-review.md)。
+
+最終APKでは `CatVisualTest#photoPausesNpcLocomotion` も成功。周囲の猫が実際に歩き出すのを待ち、撮影モードへ移ると全匹の歩行アニメーション速度が0へ戻ることを確認しました。[android-photo-idle.txt](verification/android-photo-idle.txt)
 
 ログ：[android-journey.txt](verification/android-journey.txt)、[android-process-restart.txt](verification/android-process-restart.txt)。スクリーンショット：[screenshots](verification/screenshots)。
 
@@ -63,6 +67,8 @@ APKは開発用証明書で署名され、署名検証を通過しています�
 - 初回完全オフライン、ストレージ枯渇、通信途中切断などの障害注入試験。
 - ストア提出・審査・公開。
 
+0.2の目視確認では、前脚の曲がる向き、突き出た目、耳の先端、胸の輪郭を修正。自動操作で画面外の猫の選択肢へタップしてしまうテストの不具合も、実際のスクロール操作を追加して修正しました。
+
 ## 配布物
 
-`artifacts/0.1.0-dev/` にインストール可能な開発用APK、10モデルをまとめたZIP、SHA256SUMS.txtを配置。最終サイズとハッシュは [artifacts.json](verification/artifacts.json) に記録しています。
+`artifacts/0.2.0-dev/` にインストール可能な開発用APK、10モデルをまとめたZIP、SHA256SUMS.txtを配置。最終サイズとハッシュは [artifacts.json](verification/artifacts.json) に記録しています。

@@ -51,7 +51,7 @@ test("ten unique breeds, actual GLBs and provenance", () => {
     assert.ok(j.nodes.some((n) => n.name === "tail2"));
     assert.deepEqual(
       j.animations.map((x) => x.name),
-      ["Idle", "Walk", "Trot", "Greet"],
+      ["Idle", "Walk", "Trot", "Greet", "Sit"],
     );
     assert.ok(j.extras.provenance.includes("Original"));
     for (const a of j.accessors)
@@ -174,13 +174,14 @@ test("stopping plants all four feet regardless of cycle", () => {
   for (const cycle of [0, 0.3, 0.7, 0.93]) {
     for (const pose of Object.values(gaitPose(cycle, 0))) {
       assert.equal(pose.lift, 0);
-      assert.ok(Math.abs(pose.hip) < 0.06 && Math.abs(pose.knee) < 0.06);
+      assert.equal(pose.x, 0);
+      assert.ok(pose.stance);
     }
   }
 });
 test("stance feet stay on ground and swing feet lift", () => {
-  const stance = gaitPose(0, 1.2).rear_left,
-    swing = gaitPose(0.83, 1.2).rear_left;
+  const stance = gaitPose(0, 1.2).front_left,
+    swing = gaitPose(0.83, 1.2).front_left;
   assert.equal(stance.lift, 0);
   assert.ok(swing.lift > 0.03);
 });

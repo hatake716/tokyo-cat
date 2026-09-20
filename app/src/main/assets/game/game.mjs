@@ -1,5 +1,5 @@
+import { catPose, gaitDistance } from "./cat-motion.mjs";
 import {
-  gaitPose,
   clamp,
   distance,
   offset,
@@ -537,7 +537,7 @@ function ground(pos) {
   );
   return Number.isFinite(h) ? h : pos.height;
 }
-function poseNode(model, name, angle = 0, delta = [0, 0, 0], axis = "z") {
+function applyCatPose(model, name, pose) {
   const node = model.getNode(name);
   if (!node) return;
   if (!node._catRest)
@@ -548,85 +548,54 @@ function poseNode(model, name, angle = 0, delta = [0, 0, 0], axis = "z") {
   const rest = node._catRest;
   const position = C.Cartesian3.add(
     rest.position,
-    new C.Cartesian3(...delta),
+    new C.Cartesian3(...pose.translation),
     new C.Cartesian3(),
   );
-  const rotation = C.Quaternion.fromAxisAngle(
-    axis === "y" ? C.Cartesian3.UNIT_Y : C.Cartesian3.UNIT_Z,
-    angle,
+  const pitch = C.Quaternion.fromAxisAngle(
+    C.Cartesian3.UNIT_Z,
+    pose.rotation[2],
+  );
+  const yaw = C.Quaternion.fromAxisAngle(C.Cartesian3.UNIT_Y, pose.rotation[1]);
+  const rotation = C.Quaternion.multiply(yaw, pitch, new C.Quaternion());
+  const scale = C.Cartesian3.multiplyComponents(
+    rest.scale,
+    new C.Cartesian3(...pose.scale),
+    new C.Cartesian3(),
   );
   node.matrix = C.Matrix4.fromTranslationQuaternionRotationScale(
     position,
     rotation,
-    rest.scale,
+    scale,
     new C.Matrix4(),
   );
 }
-function animate(model, pos, dt, phase = 0, greeting = 0) {
+function animate(model, pos, dt, phase = 0, greeting = 0, locomotion = true) {
   if (!model || !model.ready) return;
   model.modelMatrix = matrixAt(pos);
+  const speed = locomotion ? pos.speed : 0;
+  const breed = model._breed || catalog.breeds[1];
   model._walkSpeed =
     (model._walkSpeed || 0) +
-    (pos.speed - (model._walkSpeed || 0)) * Math.min(1, dt * 9);
+    (speed - (model._walkSpeed || 0)) * Math.min(1, dt * 12);
+  // Advance by actual travel, including breed leg length, not smoothed speed.
   model._cycle =
-    (model._cycle || phase) +
-    (model._walkSpeed * dt) / (pos.speed > 1.7 ? 0.8 : 0.42);
+    (model._cycle ?? phase) +
+    (speed * dt) / gaitDistance(model._walkSpeed, breed.legs);
   model._sit =
     (model._sit || 0) +
     ((model === cat && seated ? 1 : 0) - (model._sit || 0)) *
       Math.min(1, dt * 5);
-  const sitting = model._sit,
-    breed = model._breed || catalog.breeds[1];
-  const gait = gaitPose(model._cycle, model._walkSpeed, breed.legs);
-  for (const [name, v] of Object.entries(gait)) {
-    const rear = name.startsWith("rear");
-    poseNode(
-      model,
-      name,
-      v.hip * (1 - sitting) + (rear ? 1.1 : 0.03) * sitting,
-      [rear ? 0.025 * sitting : 0, rear ? -0.13 * sitting : 0, 0],
-    );
-    poseNode(
-      model,
-      name + "_knee",
-      v.knee * (1 - sitting) + (rear ? -2.15 : -0.03) * sitting,
-    );
-    poseNode(
-      model,
-      name + "_paw",
-      v.ankle * (1 - sitting) + (rear ? 1.05 : 0) * sitting,
-    );
-  }
-  poseNode(model, "torso", sitting * 0.47, [
-    0.008 * sitting,
-    -0.06 * sitting,
-    0,
-  ]);
-  poseNode(model, "haunch", 0, [0, -0.13 * sitting, 0]);
-  poseNode(model, "shoulders", 0, [-0.025 * sitting, 0, 0]);
-  poseNode(model, "neck", 0.12 * sitting, [
-    -0.055 * sitting,
-    0.01 * sitting,
-    0,
-  ]);
-  poseNode(model, "chest", 0.2 * sitting, [-0.03 * sitting, 0, 0]);
-  poseNode(
-    model,
-    "head",
-    greeting > 0
-      ? -0.12 + Math.sin(time * 3) * 0.025
-      : Math.sin(time * 0.8 + phase) * 0.018,
-    [-0.065 * sitting, 0.01 * sitting, 0],
-  );
-  for (let i = 0; i < 3; i++)
-    poseNode(
-      model,
-      "tail" + i,
-      Math.sin(time * 1.6 + phase - i * 0.8) * (0.12 + i * 0.025) +
-        sitting * 0.35,
-      i === 0 ? [0.04 * sitting, -0.12 * sitting, 0] : [0, 0, 0],
-      "y",
-    );
+  const pose = catPose({
+    cycle: model._cycle,
+    speed: model._walkSpeed,
+    legScale: breed.legs,
+    time,
+    phase,
+    sit: model._sit,
+    greeting,
+  });
+  for (const [name, transform] of Object.entries(pose))
+    applyCatPose(model, name, transform);
 }
 
 function frame(scene, clock) {
@@ -634,7 +603,9 @@ function frame(scene, clock) {
     dt = last ? clamp(now - last, 0, 0.05) : 0;
   last = now;
   time += dt;
-  if (!modal && !paused && mode === "play" && terrainReady && tilesReady) {
+  const exploring =
+    !modal && !paused && mode === "play" && terrainReady && tilesReady;
+  if (exploring) {
     const next = advance(p, input, yaw, dt, running, region);
     if (!collided(p, next) && !npcs.some((n) => distance(next, n) < 0.95))
       p = { ...next, height: p.height };
@@ -705,7 +676,7 @@ function frame(scene, clock) {
     }
   } else p.speed = 0;
   animate(cat, p, dt, 0, seated ? 1 : 0);
-  for (const n of npcs) animate(n.model, n, dt, n.phase, n.greeting);
+  for (const n of npcs) animate(n.model, n, dt, n.phase, n.greeting, exploring);
   updateCamera();
 }
 function updateCamera() {
@@ -713,7 +684,7 @@ function updateCamera() {
   const center = C.Cartesian3.fromDegrees(
     p.lon,
     p.lat,
-    p.height + (firstPerson && mode === "play" ? 0.3 : 0.38),
+    p.height + (firstPerson && mode === "play" ? 0.3 : 0.26),
   );
   if (mode === "home") {
     const r = 260,
@@ -1011,7 +982,7 @@ function showSettings() {
 function showCredits() {
   openModal(
     t("about"),
-    `<p class="notice">${esc(t("catNote"))}</p><p>${esc(t("dataNote"))}</p><p>${esc(t("tourNote"))}</p><p>3D: <a href="https://www.mlit.go.jp/plateau/">Project PLATEAU</a> / <a href="https://www.mlit.go.jp/plateau/site-policy/">${state.lang === "ja" ? "利用規約" : "Data policy"}</a> / <a href="https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/">Tokyo Digital Twin</a></p><p>${state.lang === "ja" ? "使用データ：東京都（千代田区・新宿区・渋谷区）／台東区、2025年度建築物モデル。ゲーム画面として合成・表示を加工。" : "Data: Tokyo Metropolitan Government (Chiyoda, Shinjuku, Shibuya) and Taito City, FY2025 buildings. Composited and styled for gameplay."}</p><p>Terrain: PLATEAU | Mapterhorn | 国土地理院<br><a href="https://docs.plateauview.mlit.go.jp/datasets/terrain/">PLATEAU Terrain</a></p><p>Imagery: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院 / GSI</a></p><p>Renderer: CesiumJS 1.127.0 — Apache-2.0<br><a href="https://github.com/CesiumGS/cesium/blob/1.127/LICENSE.md">Cesium license</a></p><p>${esc(t("breedNote"))}<br><a href="${catalog.breedSource}">Anicom 2026</a></p><p>${state.lang === "ja" ? "猫モデル制作の参考指定動画（映像自体は同梱していません）" : "User-designated cat reference (video not included)"}<br><a href="https://www.youtube.com/watch?v=Jxv0e1VXSR0">ネコの生態【サクっと解説】</a></p><p>TOKYO-CAT 0.1.0 · Development build</p>`,
+    `<p class="notice">${esc(t("catNote"))}</p><p>${esc(t("dataNote"))}</p><p>${esc(t("tourNote"))}</p><p>3D: <a href="https://www.mlit.go.jp/plateau/">Project PLATEAU</a> / <a href="https://www.mlit.go.jp/plateau/site-policy/">${state.lang === "ja" ? "利用規約" : "Data policy"}</a> / <a href="https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/">Tokyo Digital Twin</a></p><p>${state.lang === "ja" ? "使用データ：東京都（千代田区・新宿区・渋谷区）／台東区、2025年度建築物モデル。ゲーム画面として合成・表示を加工。" : "Data: Tokyo Metropolitan Government (Chiyoda, Shinjuku, Shibuya) and Taito City, FY2025 buildings. Composited and styled for gameplay."}</p><p>Terrain: PLATEAU | Mapterhorn | 国土地理院<br><a href="https://docs.plateauview.mlit.go.jp/datasets/terrain/">PLATEAU Terrain</a></p><p>Imagery: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院 / GSI</a></p><p>Renderer: CesiumJS 1.127.0 — Apache-2.0<br><a href="https://github.com/CesiumGS/cesium/blob/1.127/LICENSE.md">Cesium license</a></p><p>${esc(t("breedNote"))}<br><a href="${catalog.breedSource}">Anicom 2026</a></p><p>${state.lang === "ja" ? "猫モデル制作の参考指定動画（映像自体は同梱していません）" : "User-designated cat reference (video not included)"}<br><a href="https://www.youtube.com/watch?v=Jxv0e1VXSR0">ネコの生態【サクっと解説】</a></p><p>${state.lang === "ja" ? "猫の形と動きの参考（素材自体は同梱していません）" : "Cat anatomy and motion references (reference media not bundled)"}<br><a href="https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping">Eadweard Muybridge / NGA — Public domain</a><br><a href="https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka — CC BY-SA 3.0</a><br><a href="https://github.com/Mesh2Motion/mesh2motion-app">Mesh2Motion — CC0 art and animations</a></p><p>TOKYO-CAT 0.2.0 · Development build</p>`,
     "credits",
   );
 }
@@ -1161,11 +1132,13 @@ window.tokyoCatStatus = () => ({
   mode,
   modal,
   position: { ...p },
+  camera: { yaw, pitch, range: mode === "photo" ? photoRange : 4.2 },
   visited: Object.keys(state.visited),
   friends: [...state.friends],
   terrainReady,
   tilesReady,
   modelsReady,
+  npcAnimation: npcs.map((n) => n.model?._walkSpeed || 0),
   stats: { ...cityStats },
   error: lastError,
 });

@@ -1,28 +1,135 @@
 #!/usr/bin/env python3
 """Validate actual packaged skin, joint indices, buffers and provenance, no GL required."""
-import json,struct,hashlib
+
+import json, struct, hashlib
 from pathlib import Path
 import numpy as np
-root=Path(__file__).resolve().parents[1]/'app/src/main/assets/game/models'
-for info in json.loads((root/'manifest.json').read_text()):
- data=(root/info['file']).read_bytes();assert hashlib.sha256(data).hexdigest()==info['sha256']
- assert data[:4]==b'glTF';assert struct.unpack_from('<I',data,8)[0]==len(data)
- n=struct.unpack_from('<I',data,12)[0];j=json.loads(data[20:20+n]);binary=data[28+n:]
- def accessor(i):
-  a=j['accessors'][i];v=j['bufferViews'][a['bufferView']];width={'SCALAR':1,'VEC2':2,'VEC3':3,'VEC4':4,'MAT4':16}[a['type']];dtype={5126:'<f4',5125:'<u4',5123:'<u2'}[a['componentType']]
-  offset=v.get('byteOffset',0)+a.get('byteOffset',0);arr=np.frombuffer(binary,dtype=dtype,count=a['count']*width,offset=offset).reshape(-1,width)
-  assert np.isfinite(arr).all();assert offset+arr.nbytes<=len(binary);return arr
- for i in range(len(j['accessors'])):accessor(i)
- skin=j['skins'][0];assert len(skin['joints'])>=15;assert accessor(skin['inverseBindMatrices']).shape[0]==len(skin['joints'])
- assert all(any(j['nodes'][i]['name']==leg+'_paw' for i in skin['joints']) for leg in ['front_left','front_right','rear_left','rear_right']), 'Paws need deforming joints for foot IK'
- for i,node in enumerate(j['nodes']):
-  if node['name']=='coat_silhouette':assert any(parent['name']=='torso' and i in parent.get('children',[]) for parent in j['nodes']), 'Fur must follow torso deformation'
- mesh=next(m for m in j['meshes'] if m.get('name')=='continuous_anatomical_skin')['primitives'][0];attrs=mesh['attributes'];weights=accessor(attrs['WEIGHTS_0']);joints=accessor(attrs['JOINTS_0']);assert np.allclose(weights.sum(axis=1),1,atol=1e-5);assert joints.max()<len(skin['joints']);assert accessor(mesh['indices']).max()<len(weights)
- normals=accessor(attrs['NORMAL']);assert np.allclose(np.linalg.norm(normals,axis=1),1,atol=.01)
- positions=accessor(attrs['POSITION']);triangles=accessor(mesh['indices']).reshape(-1,3)
- face_normals=np.cross(positions[triangles[:,1]]-positions[triangles[:,0]],positions[triangles[:,2]]-positions[triangles[:,0]])
- areas=np.linalg.norm(face_normals,axis=1);dots=np.einsum('ij,ij->i',face_normals,normals[triangles].mean(axis=1))
- assert np.all(dots[areas>1e-10]>0), 'Surface winding must agree with outward normals'
- assert all('uri' not in image for image in j['images'])
- assert j['extras']['reference']=='https://www.youtube.com/watch?v=Jxv0e1VXSR0'
- print(f"PASS {info['id']}: {len(weights)} vertices, {len(skin['joints'])} joints, embedded materials, valid weights/buffers/SHA256")
+
+root = Path(__file__).resolve().parents[1] / "app/src/main/assets/game/models"
+for info in json.loads((root / "manifest.json").read_text()):
+    data = (root / info["file"]).read_bytes()
+    assert hashlib.sha256(data).hexdigest() == info["sha256"]
+    assert data[:4] == b"glTF"
+    assert struct.unpack_from("<I", data, 8)[0] == len(data)
+    n = struct.unpack_from("<I", data, 12)[0]
+    j = json.loads(data[20 : 20 + n])
+    binary = data[28 + n :]
+
+    def accessor(i):
+        a = j["accessors"][i]
+        v = j["bufferViews"][a["bufferView"]]
+        width = {"SCALAR": 1, "VEC2": 2, "VEC3": 3, "VEC4": 4, "MAT4": 16}[a["type"]]
+        dtype = {5126: "<f4", 5125: "<u4", 5123: "<u2"}[a["componentType"]]
+        offset = v.get("byteOffset", 0) + a.get("byteOffset", 0)
+        arr = np.frombuffer(
+            binary, dtype=dtype, count=a["count"] * width, offset=offset
+        ).reshape(-1, width)
+        assert np.isfinite(arr).all()
+        assert offset + arr.nbytes <= len(binary)
+        return arr
+
+    for i in range(len(j["accessors"])):
+        accessor(i)
+    skin = j["skins"][0]
+    assert len(skin["joints"]) >= 15
+    assert accessor(skin["inverseBindMatrices"]).shape[0] == len(skin["joints"])
+    assert all(
+        any(j["nodes"][i]["name"] == leg + "_paw" for i in skin["joints"])
+        for leg in ["front_left", "front_right", "rear_left", "rear_right"]
+    ), "Paws need deforming joints for foot IK"
+    for i, node in enumerate(j["nodes"]):
+        if node["name"] == "fur_fibres":
+            assert (
+                node.get("skin") == 0
+            ), "Fur must deform with the same skin as the body"
+    mesh = next(
+        m for m in j["meshes"] if m.get("name") == "continuous_anatomical_skin"
+    )["primitives"][0]
+    attrs = mesh["attributes"]
+    weights = accessor(attrs["WEIGHTS_0"])
+    joints = accessor(attrs["JOINTS_0"])
+    assert np.allclose(weights.sum(axis=1), 1, atol=1e-5)
+    assert joints.max() < len(skin["joints"])
+    assert accessor(mesh["indices"]).max() < len(weights)
+    normals = accessor(attrs["NORMAL"])
+    assert np.allclose(np.linalg.norm(normals, axis=1), 1, atol=0.01)
+    positions = accessor(attrs["POSITION"])
+    triangles = accessor(mesh["indices"]).reshape(-1, 3)
+    face_normals = np.cross(
+        positions[triangles[:, 1]] - positions[triangles[:, 0]],
+        positions[triangles[:, 2]] - positions[triangles[:, 0]],
+    )
+    areas = np.linalg.norm(face_normals, axis=1)
+    dots = np.einsum("ij,ij->i", face_normals, normals[triangles].mean(axis=1))
+    assert np.all(
+        dots[areas > 1e-10] > 0
+    ), "Surface winding must agree with outward normals"
+    assert "TEXCOORD_0" in attrs
+    material = j["materials"][mesh["material"]]
+    assert "normalTexture" in material
+    for m in j["meshes"]:
+        for primitive in m["primitives"]:
+            at = primitive["attributes"]
+            if "WEIGHTS_0" in at:
+                assert np.allclose(accessor(at["WEIGHTS_0"]).sum(axis=1), 1, atol=1e-5)
+                assert accessor(at["JOINTS_0"]).max() < len(skin["joints"])
+    assert [a["name"] for a in j["animations"]] == [
+        "Idle",
+        "Walk",
+        "Trot",
+        "Greet",
+        "Sit",
+    ]
+    # Validate the exported joint transforms, not only the runtime equations.
+    parents = {c: i for i, n in enumerate(j["nodes"]) for c in n.get("children", [])}
+
+    def trs(p):
+        x, y, z, w = p.get("rotation", [0, 0, 0, 1])
+        m = np.eye(4)
+        m[:3, :3] = np.array(
+            [
+                [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+                [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+                [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
+            ]
+        ) @ np.diag(p.get("scale", [1, 1, 1]))
+        m[:3, 3] = p.get("translation", [0, 0, 0])
+        return m
+
+    paws = [
+        i
+        for i, n in enumerate(j["nodes"])
+        if n["name"]
+        in ["front_left_paw", "front_right_paw", "rear_left_paw", "rear_right_paw"]
+    ]
+    for clip in j["animations"]:
+        channels = []
+        for ch in clip["channels"]:
+            sm = clip["samplers"][ch["sampler"]]
+            values = accessor(sm["output"])
+            assert np.allclose(values[0], values[-1]), "Clip must loop continuously"
+            channels.append((ch["target"]["node"], ch["target"]["path"], values))
+        for frame in range(61):
+            poses = [dict(n) for n in j["nodes"]]
+            for node, path, values in channels:
+                poses[node][path] = values[frame]
+            worlds = {}
+
+            def world(i):
+                if i not in worlds:
+                    worlds[i] = (
+                        world(parents[i]) if i in parents else np.eye(4)
+                    ) @ trs(poses[i])
+                return worlds[i]
+
+            heights = [world(i)[1, 3] for i in paws]
+            assert min(heights) > -0.0001, (clip["name"], frame, heights)
+            if clip["name"] in ["Idle", "Sit", "Greet"]:
+                assert max(abs(v) for v in heights) < 0.0001, (clip["name"], heights)
+            else:
+                assert max(heights) < 0.08
+    assert all("uri" not in image for image in j["images"])
+    assert j["extras"]["reference"] == "https://www.youtube.com/watch?v=Jxv0e1VXSR0"
+    print(
+        f"PASS {info['id']}: {len(weights)} vertices, {len(skin['joints'])} joints, embedded fur materials, grounded paw anchors, looping clips, valid weights/buffers/SHA256"
+    )

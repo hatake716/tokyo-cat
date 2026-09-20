@@ -1,0 +1,14 @@
+# Free references observed for the 0.2 cat revision
+
+Checked 2026-09-20/21. References inform the original authored models. Photographs, videos, downloaded third-party meshes and their textures are not packaged in the APK or published in this repository.
+
+| Work | Creator / source | Terms at source | Actual use |
+| --- | --- | --- | --- |
+| [Plate Number 720. Cat; Galloping](https://www.nga.gov/artworks/220472-plate-number-720-cat-galloping), 1887, accession 2019.150.11 | Eadweard Muybridge / National Gallery of Art | Source labels the object's media public domain | Viewed the 24 sequential photographs. Observed elongated body, compact head, spine flexion and tail counterbalance. Current game uses walk/trot; a measured gallop has **not** been reconstructed. |
+| [Felis catus-cat on snow.jpg](https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg) | Von.grzanka, 2010 | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), also offered under GFDL | Viewed the full photo to check muzzle length, cheek width, triangular nose, fine whiskers, recessed eyes, ear concha, shoulder/body proportions and limb stripes. No photo pixels or projected texture enter the models. This is observation of anatomy, not a reproduction of the photograph. |
+| [Mesh2Motion fox animation library](https://github.com/Mesh2Motion/mesh2motion-app/blob/3ce7f9d97d25e608b4779ce797da343775ded62b/static/animations/fox-animations.glb) | Mesh2Motion contributors | [CC0-1.0](https://github.com/Mesh2Motion/mesh2motion-app/blob/3ce7f9d97d25e608b4779ce797da343775ded62b/LICENSE-CC0.MD) for models, rigs and animations | Downloaded the GLB and computed forward-kinematics trajectories for Walk / Run / Sit. Observed stance/swing and articulated limbs. Fox movement is not feline motion capture and has not been copied or retargeted as cat motion. Numerical observation samples are in `cc0-motion-samples.json`. |
+| [Mesh2Motion cat variation](https://github.com/Mesh2Motion/mesh2motion-app/blob/3ce7f9d97d25e608b4779ce797da343775ded62b/static/models-variation/fox/cat.glb) | Mesh2Motion contributors | Same CC0-1.0 art license | Inspected GLB and preview. Stylized appearance; not adopted as a realistic cat mesh. |
+
+The first user-designated video remains recorded in [cat-video-reference.json](../cat-video-reference.json). No source here is represented as a multi-view scan, anatomical measurement dataset or motion-capture recording. BlendSwap / CGTrader login-gated files were not downloaded or included. The downloaded reference files are kept in the ignored `private-assets/free-reference/` directory locally.
+
+The production geometry, fur albedo/normal maps, iris pattern and movement functions were authored for TOKYO-CAT. See [CAT_MODELS.md](../../CAT_MODELS.md) for the resulting changes and remaining limits.

@@ -1,0 +1,4 @@
+# Preserve upstream distribution files and generated verification logs.
+app/src/main/assets/game/vendor/** -whitespace
+gradlew.bat whitespace=cr-at-eol
+docs/verification/*.txt -whitespace
