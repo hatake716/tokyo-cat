@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.gsi.go.jp https://*.plateauview.mlit.go.jp; connect-src 'self' blob: data: https://*.plateauview.mlit.go.jp https://assets.cms.plateau.reearth.io https://*.gsi.go.jp; worker-src 'self' blob:; object-src 'none'; frame-src 'none'; base-uri 'self'"
+    />
+    <title>TOKYO-CAT</title>
+    <link rel="stylesheet" href="vendor/cesium/Widgets/widgets.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="world" aria-label="3D Tokyo"></div>
+    <div id="shade"></div>
+    <header id="top">
+      <div class="brand">
+        <span class="paw">◉</span> TOKYO-CAT
+        <small id="brand-tagline">東京、猫のまにまに。</small>
+      </div>
+      <div class="top-actions">
+        <span id="build-badge"></span
+        ><button id="language" aria-label="Change language">EN</button
+        ><button id="settings" aria-label="Settings">☰</button>
+      </div>
+    </header>
+    <section id="home">
+      <div class="hero">
+        <div class="eyebrow">A LITTLE CAT. A WHOLE CITY.</div>
+        <h1>
+          TOKYO<span>CAT<span class="period">.</span></span>
+        </h1>
+        <p id="intro"></p>
+        <div class="hero-actions">
+          <button class="primary" id="start"></button
+          ><button class="soft" id="choose-cat"></button>
+        </div>
+        <p class="small" id="network-note"></p>
+      </div>
+      <aside class="home-side">
+        <div class="eyebrow" id="district-title"></div>
+        <div id="districts"></div>
+        <button class="album-link" id="home-album"></button>
+      </aside>
+    </section>
+    <div id="load-status" role="status">
+      <i></i><span></span><button id="retry" hidden>↻</button>
+    </div>
+    <section id="hud" hidden>
+      <div class="place-hud glass">
+        <div class="eyebrow" id="area-code"></div>
+        <strong id="area-name"></strong><span id="progress"></span>
+      </div>
+      <div class="destination glass" id="destination"></div>
+      <div class="hud-tools">
+        <button id="open-map" class="glass"></button
+        ><button id="open-album" class="glass"></button
+        ><button id="home-button" class="glass"></button>
+      </div>
+      <div id="crosshair">·</div>
+      <div id="joystick" role="application" aria-label="Movement joystick">
+        <span id="stick"></span>
+      </div>
+      <span id="move-hint"></span>
+      <div class="action-buttons">
+        <button id="perspective" class="glass"></button
+        ><button id="run" class="glass"></button
+        ><button id="greet" class="glass"></button
+        ><button id="camera" class="primary"></button>
+      </div>
+      <div id="gesture-hint"></div>
+    </section>
+    <section id="camera-ui" hidden>
+      <div class="photo-title">
+        <span class="eyebrow">TOKYO-CAT / PHOTO MODE</span>
+        <h2 id="photo-name"></h2>
+      </div>
+      <div id="frame-lines"></div>
+      <div class="camera-controls glass">
+        <label id="zoom-label"></label
+        ><input
+          id="photo-distance"
+          type="range"
+          min="1"
+          max="12"
+          value="3.5"
+          step=".1"
+          aria-label="Camera distance"
+        /><button id="pose"></button
+        ><button id="shutter" class="primary"></button
+        ><button id="exit-camera"></button>
+      </div>
+    </section>
+    <footer id="credits">
+      <span id="map-credit"
+        >3D: PLATEAU · 地形: PLATEAU / Mapterhorn / 国土地理院 · 航空写真:
+        国土地理院</span
+      ><button id="about-data">ⓘ</button>
+    </footer>
+    <div id="toast" role="status" hidden></div>
+    <div id="modal" hidden>
+      <div class="scrim"></div>
+      <section
+        class="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="sheet-header">
+          <div>
+            <div class="eyebrow" id="modal-kicker">TOKYO-CAT</div>
+            <h2 id="modal-title"></h2>
+          </div>
+          <button id="close-modal" aria-label="Close">×</button>
+        </div>
+        <div id="modal-content"></div>
+      </section>
+    </div>
+    <script src="vendor/cesium/Cesium.js"></script>
+    <script type="module" src="game.mjs"></script>
+  </body>
+</html>

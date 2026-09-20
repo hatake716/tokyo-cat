@@ -1,0 +1,12 @@
+.gradle/
+**/build/
+local.properties
+.idea/
+*.jks
+*.keystore
+keystore.properties
+artifacts/
+private-assets/
+node_modules/
+__pycache__/
+*.pyc

@@ -1,0 +1,10 @@
+PASS scottish: 31334 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS mixed: 30832 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS munchkin: 28208 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS ragdoll: 33006 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS minuet: 31524 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS siberian: 34564 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS british: 32472 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS american: 30832 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS norwegian: 35040 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256
+PASS ragamuffin: 34978 vertices, 22 joints, embedded materials, valid weights/buffers/SHA256

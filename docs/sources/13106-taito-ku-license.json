@@ -1,0 +1,8 @@
+{
+  "title": "3D都市モデル（Project PLATEAU）台東区（2025年度）",
+  "name": "plateau-13106-taito-ku-2025",
+  "license_id": "plateau",
+  "license_title": "PLATEAU Site Policy 「３．著作権について」に拠る",
+  "license_url": "https://www.mlit.go.jp/plateau/site-policy/",
+  "notes": "航空測量等に基づき取得したデータから建物等の地物を3次元で生成した3D都市モデルです。\r\n商用利用も含め、どなたでも無償で自由にご利用いただけます。\r\n\r\n**特徴**\r\n\r\n3D都市モデルとは、都市空間に存在する建物や街路といったオブジェクトに名称や用途、建築年といった都市活動情報を付与することで、都市空間そのものを再現する3D都市空間情報プラットフォームです。\r\n\r\n様々な都市活動データが3D都市モデルに統合され、フィジカル空間とサイバー空間の高度な融合が実現します。これにより、都市計画立案の高度化や、都市活動のシミュレーション、分析等を行うことが可能となります。\r\n\r\n**仕様**\r\n\r\n3D都市モデル標準製品仕様書第5.0版\r\n\r\n**整備データ** \r\n\r\n- 建築物モデル（LOD0, 1, 2.0）：CityGML形式、3DTiles形式\r\n- 交通（道路）モデル（LOD1, 2, 3）：CityGML形式、MVT形式、3DTiles形式\r\n- 交通（徒歩道）モデル（LOD3.3）：CityGML形式、3DTiles形式\r\n- 都市計画決定情報モデル（LOD1）：CityGML形式、MVT形式\r\n- 土地利用モデル（LOD1）：CityGML形式、MVT形式\r\n- 災害リスク（浸水）モデル（洪水浸水想定区域）（LOD1）：CityGML形式、3DTiles形式\r\n- 災害リスク（浸水）モデル（高潮浸水想定区域）（LOD1）：CityGML形式、3DTiles形式\r\n- 災害リスク（土砂災害）モデル（LOD1）：CityGML形式、MVT形式\r\n- 都市設備モデル（LOD1, 3.0）：CityGML形式、3DTiles形式\r\n- 植生モデル（LOD0, 1, 2）：CityGML形式、3DTiles形式\r\n- 水部モデル（LOD0, 1）：CityGML形式、MVT形式、3DTiles形式\r\n- 地形モデル（LOD1）：CityGML形式\r\n- 橋梁モデル（LOD1, 2.1 ）：CityGML形式、3DTiles形式\r\n\r\n**データのバージョンについて**\r\n \r\nデータ名の最後にカッコ書きの記載がないデータは製品仕様書V1に準拠したデータ、”(v[数字])”の記載があるデータは製品仕様書V[数字]に準拠したデータです。\r\n \r\n最新版データは、V5です。\r\n\r\n**FBX、OBJ、GlTF利用者へ**\r\n\r\n最新データはFBXは提供せず、ユーザーがニーズに応じてFBXやOBJに変換する仕組みとしています。変換はPLATEAU SDKを利用することを推奨します。\r\n\r\nSDKチュートリアル記事へのリンク\r\n\r\nhttps://www.mlit.go.jp/plateau/learning/tpc17-1/#p17_1"
+}

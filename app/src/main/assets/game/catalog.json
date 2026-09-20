@@ -1,0 +1,481 @@
+{
+  "regions": [
+    {
+      "id": "marunouchi",
+      "name": {
+        "ja": "丸の内",
+        "en": "Marunouchi"
+      },
+      "tagline": {
+        "ja": "赤レンガと、並木道。",
+        "en": "Brick, stone & quiet avenues."
+      },
+      "lon": 139.76455,
+      "lat": 35.6809,
+      "ward": "13101",
+      "radius": 900,
+      "height": 43,
+      "heading": 80,
+      "tiles": "https://assets.cms.plateau.reearth.io/assets/28/07d0a1-b6be-46ef-bd87-4f0683b5ef6e/13101_chiyoda-ku_pref_2025_citygml_1_op_bldg_3dtiles_13101_chiyoda-ku_lod2/tileset.json",
+      "year": 2025,
+      "index": 1
+    },
+    {
+      "id": "shinjuku",
+      "name": {
+        "ja": "新宿",
+        "en": "Shinjuku"
+      },
+      "tagline": {
+        "ja": "摩天楼の足もとを歩く。",
+        "en": "A small cat. A towering city."
+      },
+      "lon": 139.69245,
+      "lat": 35.6896,
+      "ward": "13104",
+      "radius": 1400,
+      "height": 76,
+      "heading": 270,
+      "tiles": "https://assets.cms.plateau.reearth.io/assets/00/bed0bd-f882-4cde-b942-21d0f8d2ddc2/13104_shinjuku-ku_pref_2025_citygml_1_op_bldg_3dtiles_13104_shinjuku-ku_lod2/tileset.json",
+      "year": 2025,
+      "index": 2
+    },
+    {
+      "id": "shibuya",
+      "name": {
+        "ja": "渋谷",
+        "en": "Shibuya"
+      },
+      "tagline": {
+        "ja": "交差する街、寄り道の時間。",
+        "en": "Every crossing, a new story."
+      },
+      "lon": 139.70048,
+      "lat": 35.65925,
+      "ward": "13113",
+      "radius": 800,
+      "height": 53,
+      "heading": 0,
+      "tiles": "https://assets.cms.plateau.reearth.io/assets/16/b016d3-42ef-4428-ad99-d229310b39fd/13113_shibuya-ku_pref_2025_citygml_1_op_bldg_3dtiles_13113_shibuya-ku_lod2/tileset.json",
+      "year": 2025,
+      "index": 3
+    },
+    {
+      "id": "asakusa",
+      "name": {
+        "ja": "浅草",
+        "en": "Asakusa"
+      },
+      "tagline": {
+        "ja": "路地の向こうに、江戸の面影。",
+        "en": "Old Tokyo, at your own pace."
+      },
+      "lon": 139.79635,
+      "lat": 35.71115,
+      "ward": "13106",
+      "radius": 800,
+      "height": 40,
+      "heading": 0,
+      "tiles": "https://assets.cms.plateau.reearth.io/assets/75/76c6bc-df54-4bf4-a869-b513526b5bd2/13106_taito-ku_city_2025_citygml_1_op_bldg_3dtiles_lod2/tileset.json",
+      "year": 2025,
+      "index": 4
+    },
+    {
+      "id": "akihabara",
+      "name": {
+        "ja": "秋葉原",
+        "en": "Akihabara"
+      },
+      "tagline": {
+        "ja": "電気街から、神田の坂へ。",
+        "en": "Electric streets & hidden shrines."
+      },
+      "lon": 139.7716,
+      "lat": 35.69812,
+      "ward": "13101",
+      "radius": 900,
+      "height": 42,
+      "heading": 0,
+      "tiles": "https://assets.cms.plateau.reearth.io/assets/28/07d0a1-b6be-46ef-bd87-4f0683b5ef6e/13101_chiyoda-ku_pref_2025_citygml_1_op_bldg_3dtiles_13101_chiyoda-ku_lod2/tileset.json",
+      "year": 2025,
+      "index": 5
+    }
+  ],
+  "places": [
+    {
+      "id": "tokyo-station",
+      "area": "marunouchi",
+      "name": {
+        "ja": "東京駅 丸の内駅舎",
+        "en": "Tokyo Station"
+      },
+      "lon": 139.7658,
+      "lat": 35.68108,
+      "radius": 75,
+      "description": {
+        "ja": "1914年に開業した東京駅。丸の内側の赤レンガ駅舎は、東京の玄関口を象徴する建築です。広場からドームと長いファサードを見上げてみましょう。",
+        "en": "Opened in 1914, Tokyo Station is a gateway to the capital. Its red-brick Marunouchi building is framed by domes. Look up from the plaza to appreciate its long facade."
+      },
+      "source": "https://www.japan.travel/en/spot/1710/"
+    },
+    {
+      "id": "naka-dori",
+      "area": "marunouchi",
+      "name": {
+        "ja": "丸の内仲通り",
+        "en": "Marunouchi Naka-dori"
+      },
+      "lon": 139.76315,
+      "lat": 35.68,
+      "radius": 55,
+      "description": {
+        "ja": "丸の内の街を南北につなぐ並木道。ショップやアートが点在し、大きなオフィスビルの足もとに散歩の楽しみがあります。猫の目線なら、植栽や歩道にも注目。",
+        "en": "This tree-lined avenue links the Marunouchi neighborhood. Shops and outdoor art bring life to the foot of the office towers. From a cat’s height, notice the paving and greenery."
+      },
+      "source": "https://visit-chiyoda.tokyo/app/en/spot/detail/462"
+    },
+    {
+      "id": "kokyo-gaien",
+      "area": "marunouchi",
+      "name": {
+        "ja": "皇居外苑",
+        "en": "Kokyo Gaien"
+      },
+      "lon": 139.76025,
+      "lat": 35.6798,
+      "radius": 80,
+      "description": {
+        "ja": "皇居の前に広がる庭園と広場。丸の内のビル群から歩くと、濠と松のある開けた景色に変わります。ゲームでは外苑側から皇居周辺の風景を眺められます。",
+        "en": "The outer gardens form an open landscape in front of the Imperial Palace. Walking from Marunouchi, towers give way to moats and pines. Explore the view from the public gardens."
+      },
+      "source": "https://www.env.go.jp/garden/kokyogaien/"
+    },
+    {
+      "id": "tocho",
+      "area": "shinjuku",
+      "name": {
+        "ja": "東京都庁",
+        "en": "Tokyo Metropolitan Government"
+      },
+      "lon": 139.69205,
+      "lat": 35.68963,
+      "radius": 65,
+      "description": {
+        "ja": "新宿の高層ビル街に建つ東京都庁。二つの塔をもつ第一本庁舎が街の目印です。大きな建築を足もとから見上げると、猫の小ささがいっそう感じられます。",
+        "en": "The twin towers of the main government building are a landmark of western Shinjuku. From ground level, the scale of the surrounding architecture is especially striking."
+      },
+      "source": "https://www.yokoso.metro.tokyo.lg.jp/"
+    },
+    {
+      "id": "omoide",
+      "area": "shinjuku",
+      "name": {
+        "ja": "思い出横丁",
+        "en": "Omoide Yokocho"
+      },
+      "lon": 139.6997,
+      "lat": 35.693,
+      "radius": 45,
+      "description": {
+        "ja": "新宿駅西口近くの、小さな飲食店が集まる路地。高層ビルの街とは異なる、昔ながらの横丁の雰囲気が残っています。入口の周りを気ままに散策しましょう。",
+        "en": "Near the west exit of Shinjuku Station, this narrow lane is known for its small eateries and nostalgic atmosphere. It offers a different face of Shinjuku from the skyscraper district."
+      },
+      "source": "https://en.shinjuku-omoide.com/"
+    },
+    {
+      "id": "hanazono",
+      "area": "shinjuku",
+      "name": {
+        "ja": "花園神社",
+        "en": "Hanazono Shrine"
+      },
+      "lon": 139.70465,
+      "lat": 35.69345,
+      "radius": 60,
+      "description": {
+        "ja": "新宿のにぎわいの中にある神社。酉の市でも知られ、街の歴史と日常が交差する場所です。境内の外から、ビルと鳥居が同じ風景に収まる新宿らしさを感じます。",
+        "en": "A shrine amid the bustle of Shinjuku, Hanazono is known for its Tori-no-Ichi festival. The surrounding streets bring shrine gates and modern buildings into a single city view."
+      },
+      "source": "https://www.kanko-shinjuku.jp/officialmovie_en/"
+    },
+    {
+      "id": "hachiko",
+      "area": "shibuya",
+      "name": {
+        "ja": "忠犬ハチ公像",
+        "en": "Hachiko Statue"
+      },
+      "lon": 139.7006,
+      "lat": 35.65903,
+      "radius": 35,
+      "description": {
+        "ja": "渋谷駅前の待ち合わせ場所として親しまれるハチ公像。飼い主を待ち続けた秋田犬を記念しています。猫として訪ねると、いつもの渋谷にも違った物語が見えそうです。",
+        "en": "This statue outside Shibuya Station commemorates Hachiko, the Akita remembered for waiting for his owner. It is also a familiar meeting point—a canine story to discover as a cat."
+      },
+      "source": "https://www.gotokyo.org/en/spot/86/index.html"
+    },
+    {
+      "id": "scramble",
+      "area": "shibuya",
+      "name": {
+        "ja": "渋谷スクランブル交差点",
+        "en": "Shibuya Scramble Crossing"
+      },
+      "lon": 139.70058,
+      "lat": 35.65952,
+      "radius": 40,
+      "description": {
+        "ja": "渋谷駅前の、いくつもの方向へ横断歩道が延びる交差点。大型のビルに囲まれた歩行者空間が街の象徴です。歩道の端から街を見渡すのも、猫らしい楽しみ方。",
+        "en": "Crosswalks fan out in several directions in front of Shibuya Station. Framed by large buildings, the crossing is an emblem of the district. Pause at the pavement edge and take in the city."
+      },
+      "source": "https://www.gotokyo.org/en/destinations/western-tokyo/shibuya/index.html"
+    },
+    {
+      "id": "miyashita",
+      "area": "shibuya",
+      "name": {
+        "ja": "MIYASHITA PARK",
+        "en": "MIYASHITA PARK"
+      },
+      "lon": 139.701,
+      "lat": 35.66245,
+      "radius": 60,
+      "description": {
+        "ja": "公園と商業施設、ホテルが一体となった渋谷の施設。線路沿いに長く延びる建物と屋上の公園が特徴です。この探索地点は施設の地上側にあります。",
+        "en": "This Shibuya complex combines a park, shops and a hotel. Its elongated building follows the railway, with a park above. This discovery point is at street level beside the complex."
+      },
+      "source": "https://www.gotokyo.org/jp/spot/1844/index.html"
+    },
+    {
+      "id": "kaminarimon",
+      "area": "asakusa",
+      "name": {
+        "ja": "雷門",
+        "en": "Kaminarimon Gate"
+      },
+      "lon": 139.79665,
+      "lat": 35.711,
+      "radius": 45,
+      "description": {
+        "ja": "浅草寺の入口を示す雷門。正式には風雷神門といい、風神と雷神が守る門として知られます。大きな提灯の下から続く仲見世の参道に、浅草らしい風景が広がります。",
+        "en": "Kaminarimon marks the entrance to Senso-ji. Also called Furaijin-mon, it is associated with the wind and thunder gods. Beyond its great lantern, Nakamise leads toward the temple."
+      },
+      "source": "https://www.senso-ji.jp/guide/guide01.html"
+    },
+    {
+      "id": "sensoji",
+      "area": "asakusa",
+      "name": {
+        "ja": "浅草寺",
+        "en": "Senso-ji Temple"
+      },
+      "lon": 139.7966,
+      "lat": 35.71435,
+      "radius": 70,
+      "description": {
+        "ja": "浅草観音としても親しまれる、東京で最も古い寺院。参道を進むと大きな本堂が姿を現します。寺院建築の屋根を、地面に近い目線で見上げてみましょう。",
+        "en": "Tokyo’s oldest temple is also known as Asakusa Kannon. Its main hall rises beyond the approach. From a low viewpoint, the broad roofs take on a particularly dramatic silhouette."
+      },
+      "source": "https://www.senso-ji.jp/english/"
+    },
+    {
+      "id": "asakusa-shrine",
+      "area": "asakusa",
+      "name": {
+        "ja": "浅草神社",
+        "en": "Asakusa Shrine"
+      },
+      "lon": 139.79772,
+      "lat": 35.7146,
+      "radius": 50,
+      "description": {
+        "ja": "浅草寺のすぐ隣にある神社で、三社様とも呼ばれています。浅草寺の始まりにゆかりのある三人を祀ります。寺院と神社が並ぶ浅草の歴史に触れられる場所です。",
+        "en": "Beside Senso-ji stands Asakusa Shrine, also known as Sanja-sama. It honors three people associated with the temple’s origins. The neighboring shrine and temple reveal layers of Asakusa’s history."
+      },
+      "source": "https://www.asakusajinja.jp/"
+    },
+    {
+      "id": "electric-town",
+      "area": "akihabara",
+      "name": {
+        "ja": "秋葉原電気街",
+        "en": "Akihabara Electric Town"
+      },
+      "lon": 139.7713,
+      "lat": 35.69845,
+      "radius": 65,
+      "description": {
+        "ja": "電気製品や電子部品の店が集まり、アニメやゲームの文化でも知られる秋葉原。中央通りの周辺では、ビルの並びと小さな路地がつくる街の奥行きを楽しめます。",
+        "en": "Known for electronics and components as well as anime and games, Akihabara rewards wandering. Around Chuo-dori, large buildings and smaller side streets create a varied urban landscape."
+      },
+      "source": "https://www.gotokyo.org/en/destinations/central-tokyo/akihabara/index.html"
+    },
+    {
+      "id": "kanda-myojin",
+      "area": "akihabara",
+      "name": {
+        "ja": "神田明神",
+        "en": "Kanda Myojin Shrine"
+      },
+      "lon": 139.7679,
+      "lat": 35.70175,
+      "radius": 55,
+      "description": {
+        "ja": "秋葉原から坂を上った先にある神田明神。神田祭で知られ、周辺の広い地域と結びついてきた神社です。電気街のにぎわいから少し離れた場所を散策できます。",
+        "en": "Uphill from Akihabara, Kanda Myojin is known for the Kanda Matsuri festival and its connections with many central Tokyo neighborhoods. Discover another atmosphere beyond the electronics district."
+      },
+      "source": "https://www.gotokyo.org/en/spot/17/"
+    },
+    {
+      "id": "manseibashi",
+      "area": "akihabara",
+      "name": {
+        "ja": "万世橋",
+        "en": "Manseibashi Bridge"
+      },
+      "lon": 139.77065,
+      "lat": 35.69675,
+      "radius": 55,
+      "description": {
+        "ja": "神田川に架かる万世橋。近くには旧万世橋駅の赤レンガ高架が残り、鉄道と街の歴史を感じられます。川沿いから眺める秋葉原も、寄り道にぴったりです。",
+        "en": "Manseibashi crosses the Kanda River beside the red-brick railway structure of the former station. The riverside gives a different view of Akihabara and its railway history."
+      },
+      "source": "https://www.ecute.jp/maach/"
+    }
+  ],
+  "breeds": [
+    {
+      "id": "scottish",
+      "name": {
+        "ja": "スコティッシュ・フォールド",
+        "en": "Scottish Fold"
+      },
+      "color": "#aa9a88",
+      "legs": 1,
+      "body": 1,
+      "fold": true,
+      "model": "models/scottish.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "mixed",
+      "name": {
+        "ja": "混血猫",
+        "en": "Mixed-breed"
+      },
+      "color": "#c28c56",
+      "legs": 1,
+      "body": 1,
+      "fold": false,
+      "model": "models/mixed.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "munchkin",
+      "name": {
+        "ja": "マンチカン",
+        "en": "Munchkin"
+      },
+      "color": "#c6a77c",
+      "legs": 0.67,
+      "body": 1,
+      "fold": false,
+      "model": "models/munchkin.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "ragdoll",
+      "name": {
+        "ja": "ラグドール",
+        "en": "Ragdoll"
+      },
+      "color": "#c8c1b6",
+      "legs": 1,
+      "body": 1.18,
+      "fold": false,
+      "model": "models/ragdoll.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "minuet",
+      "name": {
+        "ja": "ミヌエット",
+        "en": "Minuet"
+      },
+      "color": "#ddd2be",
+      "legs": 0.72,
+      "body": 1.2,
+      "fold": false,
+      "model": "models/minuet.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "siberian",
+      "name": {
+        "ja": "サイベリアン",
+        "en": "Siberian"
+      },
+      "color": "#938476",
+      "legs": 1,
+      "body": 1.3,
+      "fold": false,
+      "model": "models/siberian.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "british",
+      "name": {
+        "ja": "ブリティッシュ・ショートヘアー",
+        "en": "British Shorthair"
+      },
+      "color": "#77818b",
+      "legs": 0.93,
+      "body": 1.18,
+      "fold": false,
+      "model": "models/british.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "american",
+      "name": {
+        "ja": "アメリカン・ショートヘア",
+        "en": "American Shorthair"
+      },
+      "color": "#b1b5b8",
+      "legs": 1,
+      "body": 1,
+      "fold": false,
+      "model": "models/american.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "norwegian",
+      "name": {
+        "ja": "ノルウェージャン・フォレスト・キャット",
+        "en": "Norwegian Forest Cat"
+      },
+      "color": "#a48b72",
+      "legs": 1.15,
+      "body": 1.25,
+      "fold": false,
+      "model": "models/norwegian.glb",
+      "status": "prototype"
+    },
+    {
+      "id": "ragamuffin",
+      "name": {
+        "ja": "ラガマフィン",
+        "en": "Ragamuffin"
+      },
+      "color": "#d0b6a0",
+      "legs": 1.05,
+      "body": 1.3,
+      "fold": false,
+      "model": "models/ragamuffin.glb",
+      "status": "prototype"
+    }
+  ],
+  "breedSource": "https://www.anicom-sompo.co.jp/news-release/2025/20260219/",
+  "dataPolicy": "https://www.mlit.go.jp/plateau/site-policy/",
+  "catSource": "https://www.youtube.com/watch?v=Jxv0e1VXSR0"
+}

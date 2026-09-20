@@ -1,0 +1,40 @@
+{
+  "checked_utc": "2026-09-20T14:27:15.518797+00:00",
+  "results": [
+    {
+      "id": "13101",
+      "url": "https://assets.cms.plateau.reearth.io/assets/28/07d0a1-b6be-46ef-bd87-4f0683b5ef6e/13101_chiyoda-ku_pref_2025_citygml_1_op_bldg_3dtiles_13101_chiyoda-ku_lod2/tileset.json",
+      "http": 200,
+      "bytes": 375304,
+      "sha256": "8f6f92f7b1883e60d2e3a468b6e894ac3ccd494f8da59d9cfb4b07d2bf0eff08"
+    },
+    {
+      "id": "13104",
+      "url": "https://assets.cms.plateau.reearth.io/assets/00/bed0bd-f882-4cde-b942-21d0f8d2ddc2/13104_shinjuku-ku_pref_2025_citygml_1_op_bldg_3dtiles_13104_shinjuku-ku_lod2/tileset.json",
+      "http": 200,
+      "bytes": 422113,
+      "sha256": "95cf280a817c068a777d5a233d60a2184d6cfd18d35c7f3a1db10bb84443a9bf"
+    },
+    {
+      "id": "13113",
+      "url": "https://assets.cms.plateau.reearth.io/assets/16/b016d3-42ef-4428-ad99-d229310b39fd/13113_shibuya-ku_pref_2025_citygml_1_op_bldg_3dtiles_13113_shibuya-ku_lod2/tileset.json",
+      "http": 200,
+      "bytes": 434029,
+      "sha256": "9c8515faec797352de024c70d6ea720a0dff40366f3302781954f5e9e7a8e383"
+    },
+    {
+      "id": "13106",
+      "url": "https://assets.cms.plateau.reearth.io/assets/75/76c6bc-df54-4bf4-a869-b513526b5bd2/13106_taito-ku_city_2025_citygml_1_op_bldg_3dtiles_lod2/tileset.json",
+      "http": 200,
+      "bytes": 1313689,
+      "sha256": "597d32de344e373d0e969f8d337880f81740ead098b38752b6cdd525bef6323c"
+    },
+    {
+      "id": "terrain",
+      "url": "https://tile.plateauview.mlit.go.jp/terrain/layer.json",
+      "http": 200,
+      "bytes": 511,
+      "sha256": "06c87b519cf3b4050eaf7d0fd23c637cb34f4ee96ffe137a6e1e9bcfb68c5398"
+    }
+  ]
+}

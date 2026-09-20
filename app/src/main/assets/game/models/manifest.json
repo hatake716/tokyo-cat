@@ -1,0 +1,82 @@
+[
+  {
+    "id": "scottish",
+    "file": "scottish.glb",
+    "sha256": "70e651b677e6fb1a28a20e21e9ae965d4fca375ca0786e8bb26c232f8719cd0a",
+    "bytes": 3032808,
+    "nodes": 75,
+    "triangles": 68048
+  },
+  {
+    "id": "mixed",
+    "file": "mixed.glb",
+    "sha256": "4080b115c0de0df14d0eac6adf3cc8ff35f1998eab29b89309ae5bf44bb0d64c",
+    "bytes": 2995788,
+    "nodes": 75,
+    "triangles": 67044
+  },
+  {
+    "id": "munchkin",
+    "file": "munchkin.glb",
+    "sha256": "5fe2ba3465fe241c9b3774e6d3c3227ecaf8febf2e34c53251a69daf2cd718f3",
+    "bytes": 2775700,
+    "nodes": 75,
+    "triangles": 61796
+  },
+  {
+    "id": "ragdoll",
+    "file": "ragdoll.glb",
+    "sha256": "2976b4113c4ba3a63c11688e6deb067c0b984f268944ca645cc30ae3b5a6251b",
+    "bytes": 3256628,
+    "nodes": 76,
+    "triangles": 71992
+  },
+  {
+    "id": "minuet",
+    "file": "minuet.glb",
+    "sha256": "31e995d9c5e0ec16012a05e221e28448d916600f070dafd06c064e3f39de662e",
+    "bytes": 3141816,
+    "nodes": 76,
+    "triangles": 69028
+  },
+  {
+    "id": "siberian",
+    "file": "siberian.glb",
+    "sha256": "a30fac75b7e197d3b7f70725fab9030a3c269aeebda91d083c22218c570c6ac4",
+    "bytes": 3369636,
+    "nodes": 76,
+    "triangles": 75108
+  },
+  {
+    "id": "british",
+    "file": "british.glb",
+    "sha256": "8933e3d692d1564ad9a71fe8318ab765235a1e83bf17503b1daa57fe531d9294",
+    "bytes": 3116956,
+    "nodes": 75,
+    "triangles": 70324
+  },
+  {
+    "id": "american",
+    "file": "american.glb",
+    "sha256": "c98153ee3299bf25503cc0be6e9f63b5656c0de9c6b0f496620f095fe1a3c207",
+    "bytes": 3001112,
+    "nodes": 75,
+    "triangles": 67044
+  },
+  {
+    "id": "norwegian",
+    "file": "norwegian.glb",
+    "sha256": "7478dc5711a6b791dc93a9b5db4c0ec1ccdcd62443d95169e93df522c69dcd6e",
+    "bytes": 3414044,
+    "nodes": 76,
+    "triangles": 76060
+  },
+  {
+    "id": "ragamuffin",
+    "file": "ragamuffin.glb",
+    "sha256": "ef25e2854ed13398876548ab1a0c8d310853508d52e720120015a5f145a5e623",
+    "bytes": 3418932,
+    "nodes": 76,
+    "triangles": 75936
+  }
+]

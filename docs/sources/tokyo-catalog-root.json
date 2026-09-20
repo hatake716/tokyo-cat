@@ -1,0 +1,1 @@
+{"requested_source":"https://3dview.tokyo-digitaltwin.metro.tokyo.lg.jp/","result":"The linked S3 catalog returned AccessDenied during inspection.","implementation_source":"https://api.plateauview.mlit.go.jp/datacatalog/plateau-datasets","note":"Use public PLATEAU datasets directly. No viewer credential is included."}

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "tokyo-station",
+    "url": "https://www.japan.travel/en/spot/1710/",
+    "http": 200,
+    "final": "https://www.japan.travel/en/spot/1710/",
+    "title": "Tokyo Station | Travel Japan - Japan National Tourism Organization (Official Site)"
+  },
+  {
+    "id": "naka-dori",
+    "url": "https://visit-chiyoda.tokyo/app/en/spot/detail/462",
+    "http": 200,
+    "final": "https://visit-chiyoda.tokyo/app/en/spot/detail/462",
+    "title": "Marunouchi Naka-dori Street（Spot）|Chiyoda Tourism Association"
+  },
+  {
+    "id": "kokyo-gaien",
+    "url": "https://www.env.go.jp/garden/kokyogaien/",
+    "http": 200,
+    "final": "https://www.env.go.jp/garden/kokyogaien/",
+    "title": "皇居外苑｜皇居外苑｜国民公園｜環境省"
+  },
+  {
+    "id": "tocho",
+    "url": "https://www.yokoso.metro.tokyo.lg.jp/",
+    "http": 200,
+    "final": "https://www.yokoso.metro.tokyo.lg.jp/",
+    "title": "東京都庁見学のご案内"
+  },
+  {
+    "id": "omoide",
+    "url": "https://en.shinjuku-omoide.com/",
+    "http": 200,
+    "final": "https://en.shinjuku-omoide.com/",
+    "title": "Official website of Shinjuku Nishiguchi Omoide Yokocho"
+  },
+  {
+    "id": "hanazono",
+    "url": "https://www.kanko-shinjuku.jp/officialmovie_en/",
+    "http": 200,
+    "final": "https://www.kanko-shinjuku.jp/officialmovie_en/",
+    "title": "Shinjuku Convention & Visitors Bureau"
+  },
+  {
+    "id": "hachiko",
+    "url": "https://www.gotokyo.org/en/spot/86/index.html",
+    "http": 200,
+    "final": "https://www.gotokyo.org/en/spot/86/index.html",
+    "title": "Visit the Hachiko Statue: a brief history and where to find it | The Official Tokyo Travel Guide, GO TOKYO"
+  },
+  {
+    "id": "scramble",
+    "url": "https://www.gotokyo.org/en/destinations/western-tokyo/shibuya/index.html",
+    "http": 200,
+    "final": "https://www.gotokyo.org/en/destinations/western-tokyo/shibuya/index.html",
+    "title": "Shibuya - the epicenter of modern Japanese culture | The Official Tokyo Travel Guide, GO TOKYO"
+  },
+  {
+    "id": "miyashita",
+    "url": "https://www.gotokyo.org/jp/spot/1844/index.html",
+    "http": 200,
+    "final": "https://www.gotokyo.org/jp/spot/1844/index.html",
+    "title": "MIYASHITA PARK／東京の観光公式サイトGO TOKYO"
+  },
+  {
+    "id": "kaminarimon",
+    "url": "https://www.senso-ji.jp/guide/guide01.html",
+    "http": 200,
+    "final": "https://www.senso-ji.jp/guide/guide01.html",
+    "title": "雷門 - 浅草寺"
+  },
+  {
+    "id": "sensoji",
+    "url": "https://www.senso-ji.jp/english/",
+    "http": 200,
+    "final": "https://www.senso-ji.jp/english/",
+    "title": "ASAKUSA KANNON SENSOJI"
+  },
+  {
+    "id": "asakusa-shrine",
+    "url": "https://www.asakusajinja.jp/",
+    "http": 200,
+    "final": "https://asakusajinja.jp/",
+    "title": "浅草神社"
+  },
+  {
+    "id": "electric-town",
+    "url": "https://www.gotokyo.org/en/destinations/central-tokyo/akihabara/index.html",
+    "http": 200,
+    "final": "https://www.gotokyo.org/en/destinations/central-tokyo/akihabara/index.html",
+    "title": "A guide to Akihabara - Japan's pop culture paradise | The Official Tokyo Travel Guide, GO TOKYO"
+  },
+  {
+    "id": "kanda-myojin",
+    "url": "https://www.gotokyo.org/en/spot/17/",
+    "http": 200,
+    "final": "https://www.gotokyo.org/en/spot/17/",
+    "title": "Kanda Myojin Shrine | The Official Tokyo Travel Guide, GO TOKYO"
+  },
+  {
+    "id": "manseibashi",
+    "url": "https://www.ecute.jp/maach/",
+    "http": 200,
+    "final": "https://www.ecute.jp/maach/",
+    "title": "mAAch マーチ エキュート 神田万世橋｜楽しいことがキュ～っと詰まっている駅、エキュート"
+  }
+]
